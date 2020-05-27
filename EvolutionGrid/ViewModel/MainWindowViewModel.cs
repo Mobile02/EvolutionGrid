@@ -163,7 +163,6 @@ namespace EvolutionGrid.ViewModel
         private void Engine_ChangeGenerationProperty(object sender, int e)
         {
             Generation = e;
-
             App.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, DelegateGrafLife);
         }
 
@@ -231,25 +230,6 @@ namespace EvolutionGrid.ViewModel
         private void SelectItemCommand_Execute(Square parameter)
         {
             engine.SelectItemCommand_Execute(parameter);
-            //for (int y = 1; y < constants.WorldSizeY - 1; y++)
-            //{
-            //    for (int x = 1; x < constants.WorldSizeX - 1; x++)
-            //    {
-            //        if (WorldMap[y][x].IsSelected)
-            //            WorldMap[y][x].IsSelected = false;
-            //    }
-            //}
-
-            //if (parameter.NameSquare == NameSquare.BIO)
-            //{
-            //    parameter.IsSelected = true;
-            //    InfoSelectSquare = parameter;
-            //}
-            //else
-            //{
-            //    InfoSelectSquare = null;
-            //    parameter = null;
-            //}
         }
     }
 }
