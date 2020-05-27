@@ -55,21 +55,6 @@
                                     </Button.Template>
                                 </Button>
                             </DataTemplate>
-                            <!--<DataTemplate>
-                                <Grid
-                                    Width="15"
-                                    Height="15"
-                                    Margin="1"
-                                    Background="WhiteSmoke">
-                                    <Grid Background="{Binding Fill, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBlock
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        FontSize="10"
-                                        Foreground="White"
-                                        Text="{Binding Health, Converter={StaticResource TxtConvert}}" />
-                                </Grid>
-                            </DataTemplate>-->
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </DataTemplate>
@@ -78,7 +63,7 @@
         <Button
             Grid.Column="1"
             Width="75"
-            Margin="8.4,146,0,0"
+            Margin="8.4,99,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Command="{Binding ComStart}"
@@ -87,7 +72,7 @@
         <Button
             Grid.Column="1"
             Width="75"
-            Margin="117.4,146,0,0"
+            Margin="117.4,99,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Command="{Binding ComStop}"
@@ -119,7 +104,7 @@
             Content="Время жизни" />
         <Label
             Grid.Column="1"
-            Margin="67.4,183,0,0"
+            Margin="67.4,130,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Content="Скорость"
@@ -169,13 +154,15 @@
         <Slider
             Grid.Column="1"
             Width="182"
-            Margin="8.4,214,0,0"
+            Margin="8.4,154,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             IsDirectionReversed="True"
             Maximum="1000"
             SmallChange="1"
             Value="{Binding Speed, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+        <Label Content="-" Grid.Column="1" HorizontalAlignment="Left" Margin="7.4,128,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="16"/>
+        <Label Content="+" Grid.Column="1" HorizontalAlignment="Left" Margin="175.4,128,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="16"/>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition />

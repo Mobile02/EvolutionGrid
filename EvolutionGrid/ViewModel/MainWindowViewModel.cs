@@ -28,13 +28,12 @@ namespace EvolutionGrid.ViewModel
         private Square[][] worldMap;
         private Constants constants;
         private int generation;
-        private int speed = 20;
+        private int speed;
         private int timeLife;
         private int maxTimeLife = 0;
         private PointCollection graf;
         private int[] pointY;
         private int offsetX = 0;
-        private int scale = 700;
         private int widthGraf;
         private Square infoSelectSquare;
 

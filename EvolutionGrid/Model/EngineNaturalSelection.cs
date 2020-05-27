@@ -98,6 +98,8 @@ namespace EvolutionGrid.Model
 
             ArrayTimeLife = new int[constants.CountCicle];
 
+            Speed = 20;
+
             MainAsync();
         }
 
