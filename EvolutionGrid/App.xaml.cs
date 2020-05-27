@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EvolutionGrid.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,12 @@ namespace EvolutionGrid
     /// </summary>
     public partial class App : Application
     {
+        MainWindowViewModel viewModel = new MainWindowViewModel();
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            new MainWindow() { DataContext = viewModel }.Show();
+        }
     }
 }

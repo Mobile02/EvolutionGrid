@@ -13,15 +13,14 @@
     ScrollViewer.VerticalScrollBarVisibility="Disabled"
     SizeToContent="WidthAndHeight"
     mc:Ignorable="d">
+    <!--  xmlns:model="clr-namespace:EvolutionGrid.Model"  -->
 
-    <Window.DataContext>
-        <user:MainWindowViewModel />
-    </Window.DataContext>
-    
     <Grid>
         <ItemsControl ItemsSource="{Binding WorldMap, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <ItemsControl.Resources>
                 <user:TextConverter x:Key="TxtConvert" />
+                <user:NameToColorConverter x:Key="NameToColorConvert" />
+                <user:BoolToColorConverter x:Key="BoolToColorConvert" />
             </ItemsControl.Resources>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -33,11 +32,35 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
+                                <Button Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SelectItemCommand}" CommandParameter="{Binding Path=.}">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Grid
+                                                Width="15"
+                                                Height="15"
+                                                Margin="1"
+                                                Background="WhiteSmoke">
+                                                <Grid Background="{Binding NameSquare, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource NameToColorConvert}}">
+                                                    <Border Background="{Binding IsSelected, Converter={StaticResource BoolToColorConvert}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </Grid>
+                                                <TextBlock
+                                                    Margin="2"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="10"
+                                                    Foreground="White"
+                                                    Text="{Binding Health, Converter={StaticResource TxtConvert}}" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </DataTemplate>
+                            <!--<DataTemplate>
                                 <Grid
                                     Width="15"
                                     Height="15"
                                     Margin="1"
-                                    Background="WhiteSmoke" MouseDown="Grid_MouseDown">
+                                    Background="WhiteSmoke">
                                     <Grid Background="{Binding Fill, UpdateSourceTrigger=PropertyChanged}" />
                                     <TextBlock
                                         HorizontalAlignment="Center"
@@ -46,7 +69,7 @@
                                         Foreground="White"
                                         Text="{Binding Health, Converter={StaticResource TxtConvert}}" />
                                 </Grid>
-                            </DataTemplate>
+                            </DataTemplate>-->
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </DataTemplate>
@@ -94,44 +117,9 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Content="Время жизни" />
-        <Button
-            Grid.Column="1"
-            Width="20"
-            Height="20"
-            Margin="172,185,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Command="{Binding ComSpeedPlus}"
-            Content="+"
-            FontWeight="Bold"
-            IsEnabled="{Binding EnableStartButton}"
-            ScrollViewer.VerticalScrollBarVisibility="Disabled"
-            UseLayoutRounding="False" />
-        <Button
-            Grid.Column="1"
-            Width="20"
-            Height="20"
-            Margin="106.4,185,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Command="{Binding ComSpeedMinus}"
-            Content="-"
-            FontWeight="Bold" />
-        <TextBox
-            Grid.Column="1"
-            Width="45"
-            Height="20"
-            Margin="126.4,185,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center"
-            IsEnabled="False"
-            Text="{Binding Speed, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-            TextWrapping="Wrap" />
         <Label
             Grid.Column="1"
-            Margin="3.4,183,0,0"
+            Margin="67.4,183,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Content="Скорость"
@@ -140,13 +128,14 @@
         <Polyline
             Grid.Row="1"
             Grid.Column="0"
-            Width="{Binding ElementName=col0, Path=ActualWidth}"
-            Margin="4"
+            Width="{Binding WidthGraf, UpdateSourceTrigger=PropertyChanged}"
+            Margin="10"
+            HorizontalAlignment="Left"
             Points="{Binding Graf, UpdateSourceTrigger=PropertyChanged}"
             RenderTransformOrigin="0.5,0.5"
             Stretch="Fill"
             Stroke="Red"
-            StrokeThickness="1" HorizontalAlignment="Left">
+            StrokeThickness="1">
             <Polyline.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleX="1" ScaleY="-1" />
@@ -156,16 +145,40 @@
                 </TransformGroup>
             </Polyline.RenderTransform>
         </Polyline>
-        <Label Content="Max время жизни" Grid.Column="1" HorizontalAlignment="Left" Margin="3.4,52,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label
+            Grid.Column="1"
+            Margin="3.4,52,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Max время жизни"
+            FontWeight="Bold" />
         <Label
             Grid.Column="1"
             Margin="126.4,52,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Content="{Binding MaxTimeLife, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" />
+            Content="{Binding MaxTimeLife, UpdateSourceTrigger=PropertyChanged}"
+            FontWeight="Bold" />
+        <Label
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="10.4,10,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="{Binding InfoSelectSquare.Health}" />
+        <Slider
+            Grid.Column="1"
+            Width="182"
+            Margin="8.4,214,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            IsDirectionReversed="True"
+            Maximum="1000"
+            SmallChange="1"
+            Value="{Binding Speed, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="col0"/>
+            <ColumnDefinition />
             <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>

@@ -47,9 +47,9 @@ namespace EvolutionGrid.Model
                 y = random.Next(1, constants.WorldSizeY - 1);
                 x = random.Next(1, constants.WorldSizeX - 1);
 
-                if (worldMap[y][x].Fill == Brushes.WhiteSmoke)
+                if (worldMap[y][x].NameSquare == NameSquare.EMPTY)
                 {
-                    worldMap[y][x].Fill = Brushes.Blue;
+                    worldMap[y][x].NameSquare = NameSquare.BIO;
                     worldMap[y][x].Health = constants.HealthSquare;
                     worldMap[y][x].Direction = (Direction)random.Next(8);
                     worldMap[y][x].Pointer = 0;
@@ -70,7 +70,7 @@ namespace EvolutionGrid.Model
             {
                 for (int x = 1; x < constants.WorldSizeX - 1; x++)
                 {
-                    if (worldMap[y][x].Fill == Brushes.Red)
+                    if (worldMap[y][x].NameSquare == NameSquare.ACID)
                         tmpCount++;
                 }
             }
@@ -85,9 +85,9 @@ namespace EvolutionGrid.Model
                 int y = random.Next(1, constants.WorldSizeY - 1);
                 int x = random.Next(1, constants.WorldSizeX - 1);
 
-                if (worldMap[y][x].Fill == Brushes.WhiteSmoke)
+                if (worldMap[y][x].NameSquare == NameSquare.EMPTY)
                 {
-                    worldMap[y][x].Fill = Brushes.Red;
+                    worldMap[y][x].NameSquare = NameSquare.ACID;
                     tmpCount++;
                 }
             }
@@ -101,7 +101,7 @@ namespace EvolutionGrid.Model
             {
                 for (int x = 1; x < constants.WorldSizeX - 1; x++)
                 {
-                    if (worldMap[y][x].Fill == Brushes.Green)
+                    if (worldMap[y][x].NameSquare == NameSquare.FOOD)
                         tmpCount++;
                 }
             }
@@ -116,9 +116,9 @@ namespace EvolutionGrid.Model
                 int y = random.Next(1, constants.WorldSizeY - 1);
                 int x = random.Next(1, constants.WorldSizeX - 1);
 
-                if (worldMap[y][x].Fill == Brushes.WhiteSmoke)
+                if (worldMap[y][x].NameSquare == NameSquare.EMPTY)
                 {
-                    worldMap[y][x].Fill = Brushes.Green;
+                    worldMap[y][x].NameSquare = NameSquare.FOOD;
                     tmpCount++;
                 }
             }
@@ -135,7 +135,7 @@ namespace EvolutionGrid.Model
             {
                 for (int x = 1; x < constants.WorldSizeX - 1; x++)
                 {
-                    if (worldMap[y][x].Fill == Brushes.Blue)
+                    if (worldMap[y][x].NameSquare == NameSquare.BIO)
                     {
                         arraySquares[count] = (Square)worldMap[y][x].Clone();
 
@@ -153,9 +153,9 @@ namespace EvolutionGrid.Model
                     int x = random.Next(1, constants.WorldSizeX - 1);
                     int y = random.Next(1, constants.WorldSizeY - 1);
 
-                    if (worldMap[y][x].Fill == Brushes.WhiteSmoke)
+                    if (worldMap[y][x].NameSquare == NameSquare.EMPTY)
                     {
-                        worldMap[y][x].Fill = Brushes.Blue;
+                        worldMap[y][x].NameSquare = NameSquare.BIO;
                         worldMap[y][x].Health = constants.HealthSquare;
                         worldMap[y][x].Direction = (Direction)random.Next(8);
                         worldMap[y][x].Pointer = 0;
@@ -176,9 +176,9 @@ namespace EvolutionGrid.Model
                 int y = random.Next(1, constants.WorldSizeY - 1);
                 int x = random.Next(1, constants.WorldSizeX - 1);
 
-                if (worldMap[y][x].Fill == Brushes.WhiteSmoke)
+                if (worldMap[y][x].NameSquare == NameSquare.EMPTY)
                 {
-                    worldMap[y][x].Fill = Brushes.Gray;
+                    worldMap[y][x].NameSquare = NameSquare.WALL;
                     count--;
                 }
             }
@@ -190,15 +190,48 @@ namespace EvolutionGrid.Model
             {
                 for (int x = 1; x < constants.WorldSizeX - 1; x++)
                 {
-                    if (worldMap[y][x].Fill != Brushes.Gray && worldMap[y][x].Fill != Brushes.Blue)
+                    if (worldMap[y][x].NameSquare != NameSquare.WALL && worldMap[y][x].NameSquare != NameSquare.BIO)
                     {
-                        worldMap[y][x].Fill = Brushes.WhiteSmoke;
+                        worldMap[y][x].NameSquare = NameSquare.EMPTY;
                         worldMap[y][x].Pointer = 0;
                         worldMap[y][x].Brain = null;
                     }
 
-                    if (worldMap[y][x].Fill == Brushes.Blue)
+                    if (worldMap[y][x].NameSquare == NameSquare.BIO)
                         worldMap[y][x].Health = constants.HealthSquare;
+                }
+            }
+        }
+
+        public void FillWorldMap(Square[][] worldMap)
+        {
+            for (int y = 0; y < constants.WorldSizeY; y++)
+            {
+                worldMap[y] = new Square[constants.WorldSizeX];
+
+                for (int x = 0; x < constants.WorldSizeX; x++)
+                {
+                    worldMap[y][x] = new Square
+                    {
+                        PointX = x,
+                        PointY = y,
+                        NameSquare = NameSquare.EMPTY
+                    };
+
+                    if (y == 0 || y == constants.WorldSizeY - 1)
+                        worldMap[y][x] = new Square
+                        {
+                            PointX = x,
+                            PointY = y,
+                            NameSquare = NameSquare.WALL
+                        };
+                    if (x == 0 || x == constants.WorldSizeX - 1)
+                        worldMap[y][x] = new Square
+                        {
+                            PointX = x,
+                            PointY = y,
+                            NameSquare = NameSquare.WALL
+                        };
                 }
             }
         }

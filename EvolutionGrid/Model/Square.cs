@@ -1,10 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace EvolutionGrid.Model
 {
@@ -14,15 +9,25 @@ namespace EvolutionGrid.Model
         private int pointy;
         private int width;
         private int height;
-        private Brush fill;
+        private ColorSquare fill;
         private int energyFood;
         private int health;
         private Direction direction;
         private int[] brain;
         private int pointer;
+        private NameSquare nameSquare;
+        private bool isSelected;
 
-        public bool IsSelected;
 
+        public bool IsSelected
+        {
+            get { return isSelected; }
+            set
+            {
+                isSelected = value;
+                RaisePropertyChanged("IsSelected");
+            }
+        }
         public int PointX
         {
             get { return pointx; }
@@ -59,7 +64,7 @@ namespace EvolutionGrid.Model
                 RaisePropertyChanged("Height");
             }
         }
-        public Brush Fill
+        public ColorSquare Fill
         {
             get { return fill; }
             set
@@ -113,23 +118,19 @@ namespace EvolutionGrid.Model
                 RaisePropertyChanged("Pointer");
             }
         }
+        public NameSquare NameSquare
+        {
+            get { return nameSquare; }
+            set
+            {
+                nameSquare = value;
+                RaisePropertyChanged("NameSquare");
+            }
+        }
 
         public object Clone()
         {
             return this.MemberwiseClone();
-            //return new Square
-            //{
-            //    PointX = this.PointX,
-            //    PointY = this.PointY,
-            //    Width = this.Width,
-            //    Height = this.Height,
-            //    Fill = this.Fill,
-            //    EnefgyFood = this.EnefgyFood,
-            //    Health = this.Health,
-            //    Direction = this.Direction,
-            //    Brain = this.Brain,
-            //    Pointer = this.Pointer
-            //};
         }
     }
 }

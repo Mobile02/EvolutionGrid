@@ -17,28 +17,47 @@ namespace EvolutionGrid.ViewModel
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private ManualResetEventSlim eventSlim;
+        private EngineNaturalSelection engine;
 
-        private ICommand cSpeedPlus;
-        private ICommand cSpeedMinus;
         private ICommand cStart;
         private ICommand cStop;
+        private ICommand selectItemCommand;
 
         Action DelegateGrafLife;
 
         private Square[][] worldMap;
         private Constants constants;
         private int generation;
-        private int speed = 980;
-        private bool enableStartButton = true;
+        private int speed = 20;
         private int timeLife;
         private int maxTimeLife = 0;
         private PointCollection graf;
-        private int pointX = 0;
         private int[] pointY;
         private int offsetX = 0;
         private int scale = 700;
+        private int widthGraf;
+        private Square infoSelectSquare;
 
+
+        public int WidthGraf
+        {
+            get { return widthGraf; }
+            set
+            {
+                widthGraf = value;
+                RaisePropertyChanged("WidthGraf");
+            }
+        }
+
+        public Square InfoSelectSquare
+        {
+            get { return infoSelectSquare; }
+            set
+            {
+                infoSelectSquare = value;
+                RaisePropertyChanged("InfoSelectSquare");
+            }
+        }
 
         public PointCollection Graf
         {
@@ -76,17 +95,8 @@ namespace EvolutionGrid.ViewModel
             set
             {
                 speed = value;
+                engine.Speed = value;
                 RaisePropertyChanged("Speed");
-            }
-        }
-
-        public bool EnableStartButton
-        {
-            get { return enableStartButton; }
-            set
-            {
-                enableStartButton = value;
-                RaisePropertyChanged("EnableStartButton");
             }
         }
 
@@ -117,94 +127,44 @@ namespace EvolutionGrid.ViewModel
             pointY = new int[constants.CountCicle];
             WorldMap = new Square[constants.WorldSizeY][];
 
-            for (int y = 0; y < constants.WorldSizeY; y++)
-            {
-                WorldMap[y] = new Square[constants.WorldSizeX];
+            engine = new EngineNaturalSelection();
+            WorldMap = engine.WorldMap;
 
-                for (int x = 0; x < constants.WorldSizeX; x++)
-                {
-                    WorldMap[y][x] = new Square
-                    {
-                        PointX = x,
-                        PointY = y,
-                        Fill = Brushes.WhiteSmoke,
-                    };
-
-                    if (y == 0 || y == constants.WorldSizeY - 1)
-                        WorldMap[y][x] = new Square
-                        {
-                            PointX = x,
-                            PointY = y,
-                            Fill = Brushes.Gray,
-                        };
-                    if (x == 0 || x == constants.WorldSizeX - 1)
-                        WorldMap[y][x] = new Square
-                        {
-                            PointX = x,
-                            PointY = y,
-                            Fill = Brushes.Gray,
-                        };
-                }
-            }
-
-            CountOfLive.CountLiveBio = constants.CountSquare;
-
-            eventSlim = new ManualResetEventSlim(false);
-
-            new GeneratorSquare().AddWall(WorldMap, 60);
-            new GeneratorSquare().AddAcidSquare(WorldMap, constants.CountAcid);
-            new GeneratorSquare().AddFoodSquare(WorldMap, constants.CountFood);
-            new GeneratorSquare().AddBioSquare(WorldMap, constants.CountSquare);
-
-            //new FileOperation().SaveBrain(WorldMap);
-
-            MainAsync();
-        }
-
-        private async void MainAsync()
-        {
+            WidthGraf = (int)(constants.WorldSizeX * 15 + (constants.WorldSizeX * 1.5));
+            pointY = engine.ArrayTimeLife;
             
-            await Task.Run(() => Main());
-
-            MessageBox.Show(Generation.ToString(), "End");
+            engine.ChangeGenerationProperty += Engine_ChangeGenerationProperty;
+            engine.ChangeMaxTimeLifeProperty += Engine_ChangeMaxTimeLifeProperty;
+            engine.ChangeOffsetXProperty += Engine_ChangeOffsetXProperty;
+            engine.ChangeSquareProperty += Engine_ChangeSquareProperty;
+            engine.ChangeTimeLifeProperty += Engine_ChangeTimeLifeProperty;
         }
 
-        private void Main()
+        private void Engine_ChangeTimeLifeProperty(object sender, int e)
         {
-            for (int gen = 0; gen < constants.CountCicle; gen++)
-            {
-                for (int i = 0; i < int.MaxValue; i++)
-                {
-                    eventSlim.Wait();
+            TimeLife = e;
+        }
 
-                    new BehaviorSquare(WorldMap);
-                    
-                    Thread.Sleep(1000 - Speed);
+        private void Engine_ChangeSquareProperty(object sender, Square e)
+        {
+            InfoSelectSquare = e;
+        }
 
-                    TimeLife = i;
-                    if (MaxTimeLife < TimeLife)
-                        MaxTimeLife = TimeLife;
+        private void Engine_ChangeOffsetXProperty(object sender, int e)
+        {
+            offsetX = e;
+        }
 
-                    if (CountOfLive.CountLiveBio <= (constants.CountSquare / 8))
-                    {
-                        new GeneratorSquare().RefreshSquare(WorldMap);
-                        new GeneratorSquare().AddAcidSquare(WorldMap, constants.CountAcid);
-                        new GeneratorSquare().AddFoodSquare(WorldMap, constants.CountFood);
-                        new GeneratorSquare().AddChild(WorldMap);
-                        CountOfLive.CountLiveBio = constants.CountSquare;
+        private void Engine_ChangeMaxTimeLifeProperty(object sender, int e)
+        {
+            MaxTimeLife = e;
+        }
 
-                        if (pointX > scale)
-                            offsetX++;
+        private void Engine_ChangeGenerationProperty(object sender, int e)
+        {
+            Generation = e;
 
-                        pointY[pointX] = i;
-                        App.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, DelegateGrafLife);
-
-                        Generation = gen;
-                        i = int.MaxValue - 1;
-                        pointX++;
-                    }
-                }
-            }
+            App.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, DelegateGrafLife);
         }
 
         private void GrafLife()
@@ -220,30 +180,7 @@ namespace EvolutionGrid.ViewModel
         }
 
         #region Commands
-        public ICommand ComSpeedPlus
-        {
-            get
-            {
-                if (cSpeedPlus == null)
-                {
-                    return cSpeedPlus = new RelayCommand(execute: SpeedPlus);
-                }
-                return cSpeedPlus;
-            }
-        }
-
-        public ICommand ComSpeedMinus
-        {
-            get
-            {
-                if (cSpeedMinus == null)
-                {
-                    return cSpeedMinus = new RelayCommand(execute: SpeedMinus);
-                }
-                return cSpeedMinus;
-            }
-        }
-
+        
         public ICommand ComStart
         {
             get
@@ -268,36 +205,51 @@ namespace EvolutionGrid.ViewModel
             }
         }
 
-        #endregion
-
-        private void SpeedPlus()
+        public ICommand SelectItemCommand
         {
-            Speed += 10;
-
-            if (Speed >= 1000)
+            get
             {
-                Speed = 1000;
-                EnableStartButton = false;
+                if (selectItemCommand == null)
+                    return selectItemCommand = new RelayCommand<Square>(SelectItemCommand_Execute);
+
+                return selectItemCommand;
             }
         }
 
-        private void SpeedMinus()
-        {
-            Speed -= 10;
-
-            if (Speed < 1000)
-                EnableStartButton = true;
-        }
+        #endregion
 
         private void Start()
         {
-            eventSlim.Set();
+            engine.Start();
         }
 
         private void Stop()
         {
-            eventSlim.Reset();
-            new FileOperation().SaveTimeLife(pointY);
+            engine.Stop();
+        }
+
+        private void SelectItemCommand_Execute(Square parameter)
+        {
+            engine.SelectItemCommand_Execute(parameter);
+            //for (int y = 1; y < constants.WorldSizeY - 1; y++)
+            //{
+            //    for (int x = 1; x < constants.WorldSizeX - 1; x++)
+            //    {
+            //        if (WorldMap[y][x].IsSelected)
+            //            WorldMap[y][x].IsSelected = false;
+            //    }
+            //}
+
+            //if (parameter.NameSquare == NameSquare.BIO)
+            //{
+            //    parameter.IsSelected = true;
+            //    InfoSelectSquare = parameter;
+            //}
+            //else
+            //{
+            //    InfoSelectSquare = null;
+            //    parameter = null;
+            //}
         }
     }
 }
