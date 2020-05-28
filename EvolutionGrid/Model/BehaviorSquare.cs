@@ -112,11 +112,7 @@ namespace EvolutionGrid.Model
 
             if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health <= 0 && worldMap[(int)currentPoint.Y][(int)currentPoint.X].NameSquare == NameSquare.BIO)
             {
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health = 0;
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].NameSquare = NameSquare.EMPTY;
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain = null;
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].IsSelected = false;
-
+                DeleteBio();
                 CountOfLive.CountLiveBio--;
 
                 if (CountOfLive.CountLiveBio == (constants.CountSquare / 8))
@@ -192,49 +188,19 @@ namespace EvolutionGrid.Model
 
             if (worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare == NameSquare.FOOD)
             {
-                worldMap[(int)newPoint.Y][(int)newPoint.X].Brain = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain;
-                worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare = NameSquare.BIO;
-                worldMap[(int)newPoint.Y][(int)newPoint.X].Pointer = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer;
-                worldMap[(int)newPoint.Y][(int)newPoint.X].Health = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health + constants.EnergyFood;
-                worldMap[(int)newPoint.Y][(int)newPoint.X].Direction = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Direction;
-                worldMap[(int)newPoint.Y][(int)newPoint.X].IsSelected = worldMap[(int)currentPoint.Y][(int)currentPoint.X].IsSelected;
-
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].NameSquare = NameSquare.EMPTY;
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain = null;
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].EnergyFood = 0;
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health = 0;
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].IsSelected = false;
-
-                currentPoint.X = newPoint.X;
-                currentPoint.Y = newPoint.Y;
-
+                StepBio((int)newPoint.Y, (int)newPoint.X);
+                
                 new GeneratorSquare().AddFoodSquare(worldMap, 1);
             }
 
             if (worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare == NameSquare.EMPTY)
             {
-                worldMap[(int)newPoint.Y][(int)newPoint.X].Brain = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain;
-                worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare = NameSquare.BIO;
-                worldMap[(int)newPoint.Y][(int)newPoint.X].Pointer = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer;
-                worldMap[(int)newPoint.Y][(int)newPoint.X].Health = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health;
-                worldMap[(int)newPoint.Y][(int)newPoint.X].Direction = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Direction;
-                worldMap[(int)newPoint.Y][(int)newPoint.X].IsSelected = worldMap[(int)currentPoint.Y][(int)currentPoint.X].IsSelected;
-
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].NameSquare = NameSquare.EMPTY;
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain = null;
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].EnergyFood = 0;
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health = 0;
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].IsSelected = false;
-
-                currentPoint.X = newPoint.X;
-                currentPoint.Y = newPoint.Y;
+                StepBio((int)newPoint.Y, (int)newPoint.X);
             }
 
             if (worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare == NameSquare.ACID)
             {
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].NameSquare = NameSquare.ACID;
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health = 0;
-                worldMap[(int)currentPoint.Y][(int)currentPoint.X].IsSelected = false;
+                DeleteBio();
                 CountOfLive.CountLiveBio--;
 
                 if (CountOfLive.CountLiveBio == (constants.CountSquare / 8))
@@ -280,6 +246,30 @@ namespace EvolutionGrid.Model
                 worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare = NameSquare.FOOD;
                 new GeneratorSquare().AddAcidSquare(worldMap, 1);
             }
+        }
+
+        private void DeleteBio()
+        {
+            worldMap[(int)currentPoint.Y][(int)currentPoint.X].NameSquare = NameSquare.EMPTY;
+            worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain = null;
+            worldMap[(int)currentPoint.Y][(int)currentPoint.X].EnergyFood = 0;
+            worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health = 0;
+            worldMap[(int)currentPoint.Y][(int)currentPoint.X].IsSelected = false;
+        }
+
+        private void StepBio(int pointY, int pointX)
+        {
+            worldMap[pointY][pointX].Brain = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain;
+            worldMap[pointY][pointX].NameSquare = NameSquare.BIO;
+            worldMap[pointY][pointX].Pointer = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer;
+            worldMap[pointY][pointX].Health = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health;
+            worldMap[pointY][pointX].Direction = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Direction;
+            worldMap[pointY][pointX].IsSelected = worldMap[(int)currentPoint.Y][(int)currentPoint.X].IsSelected;
+
+            DeleteBio();
+
+            currentPoint.X = pointX;
+            currentPoint.Y = pointY;
         }
     }
 }

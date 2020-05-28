@@ -158,11 +158,26 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             IsDirectionReversed="True"
+            LargeChange="100"
             Maximum="1000"
-            SmallChange="1"
-            Value="{Binding Speed, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-        <Label Content="-" Grid.Column="1" HorizontalAlignment="Left" Margin="7.4,128,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="16"/>
-        <Label Content="+" Grid.Column="1" HorizontalAlignment="Left" Margin="175.4,128,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="16"/>
+            SmallChange="10"
+            Value="{Binding Speed, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+        <Label
+            Grid.Column="1"
+            Margin="7.4,128,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="-"
+            FontSize="16"
+            FontWeight="Bold" />
+        <Label
+            Grid.Column="1"
+            Margin="175.4,128,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="+"
+            FontSize="16"
+            FontWeight="Bold" />
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition />

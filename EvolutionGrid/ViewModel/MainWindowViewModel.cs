@@ -132,37 +132,15 @@ namespace EvolutionGrid.ViewModel
             WidthGraf = (int)(constants.WorldSizeX * 15 + (constants.WorldSizeX * 1.5));
             pointY = engine.ArrayTimeLife;
             
-            engine.ChangeGenerationProperty += Engine_ChangeGenerationProperty;
-            engine.ChangeMaxTimeLifeProperty += Engine_ChangeMaxTimeLifeProperty;
-            engine.ChangeOffsetXProperty += Engine_ChangeOffsetXProperty;
-            engine.ChangeSquareProperty += Engine_ChangeSquareProperty;
-            engine.ChangeTimeLifeProperty += Engine_ChangeTimeLifeProperty;
-        }
-
-        private void Engine_ChangeTimeLifeProperty(object sender, int e)
-        {
-            TimeLife = e;
-        }
-
-        private void Engine_ChangeSquareProperty(object sender, Square e)
-        {
-            InfoSelectSquare = e;
-        }
-
-        private void Engine_ChangeOffsetXProperty(object sender, int e)
-        {
-            offsetX = e;
-        }
-
-        private void Engine_ChangeMaxTimeLifeProperty(object sender, int e)
-        {
-            MaxTimeLife = e;
-        }
-
-        private void Engine_ChangeGenerationProperty(object sender, int e)
-        {
-            Generation = e;
-            App.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, DelegateGrafLife);
+            engine.ChangeGenerationProperty += (sender, e) => 
+            { 
+                Generation = e;
+                App.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, DelegateGrafLife);
+            };
+            engine.ChangeMaxTimeLifeProperty += (sender, e) => MaxTimeLife = e;
+            engine.ChangeOffsetXProperty += (sender, e) => offsetX = e;
+            engine.ChangeSquareProperty += (sender, e) => InfoSelectSquare = e;
+            engine.ChangeTimeLifeProperty += (sender, e) => TimeLife = e;
         }
 
         private void GrafLife()

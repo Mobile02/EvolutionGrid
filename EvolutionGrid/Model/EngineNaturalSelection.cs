@@ -24,7 +24,6 @@ namespace EvolutionGrid.Model
         private void RaiseTimeLifeProperty(int value) => ChangeTimeLifeProperty?.Invoke(this, value);
         private void RaiseGenerationProperty(int value) => ChangeGenerationProperty?.Invoke(this, value);
         private void RaiseMaxTimeLifeProperty(int value) => ChangeMaxTimeLifeProperty?.Invoke(this, value);
-
         private void RaiseMyProperty(Square value) => ChangeSquareProperty?.Invoke(this, value);
 
 
