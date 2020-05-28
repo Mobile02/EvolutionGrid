@@ -251,6 +251,7 @@ namespace EvolutionGrid.Model
                 worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare = NameSquare.FOOD;
 
                 CountSquare.CountAcid--;
+                CountSquare.CountFood++;
 
                 new GeneratorSquare().AddAcidSquare(worldMap, 1);
             }
