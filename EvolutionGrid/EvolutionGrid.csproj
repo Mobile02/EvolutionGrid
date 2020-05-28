@@ -80,7 +80,7 @@
     </Compile>
     <Compile Include="Model\BehaviorSquare.cs" />
     <Compile Include="Model\ColorSquare.cs" />
-    <Compile Include="Model\CountOfLive.cs" />
+    <Compile Include="Model\CountSquare.cs" />
     <Compile Include="Model\EngineNaturalSelection.cs" />
     <Compile Include="Model\FileOperation.cs" />
     <Compile Include="Model\GeneratorSquare.cs" />

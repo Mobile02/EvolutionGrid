@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace EvolutionGrid.Model
 {
-    public static class CountOfLive
+    public static class CountSquare
     {
         public static int CountLiveBio;
+        public static int CountFood;
+        public static int CountAcid;
     }
 }

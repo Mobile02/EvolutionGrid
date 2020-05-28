@@ -11,8 +11,14 @@ namespace EvolutionGrid.Model
 {
     public class GeneratorSquare
     {
-        private Random random = new Random();
+        private Random random;
         private Constants constants = new Constants();
+
+        public GeneratorSquare()
+        {
+            DateTimeOffset timeOffset = new DateTimeOffset(DateTime.Now);
+            random = new Random((int)timeOffset.Ticks);
+        }
 
         private int[] GeneratorBrain()
         {
@@ -64,23 +70,10 @@ namespace EvolutionGrid.Model
 
         public void AddAcidSquare(Square[][] worldMap, int count)
         {
-            int tmpCount = 0;
-
-            for (int y = 1; y < constants.WorldSizeY - 1; y++)
-            {
-                for (int x = 1; x < constants.WorldSizeX - 1; x++)
-                {
-                    if (worldMap[y][x].NameSquare == NameSquare.ACID)
-                        tmpCount++;
-                }
-            }
-
-            if (tmpCount >= constants.CountAcid + 10)
+            if (CountSquare.CountAcid > constants.CountAcid + 10)
                 return;
-            else
-                tmpCount = 0;
 
-            while (tmpCount < count)
+            while (count > 0)
             {
                 int y = random.Next(1, constants.WorldSizeY - 1);
                 int x = random.Next(1, constants.WorldSizeX - 1);
@@ -88,30 +81,18 @@ namespace EvolutionGrid.Model
                 if (worldMap[y][x].NameSquare == NameSquare.EMPTY)
                 {
                     worldMap[y][x].NameSquare = NameSquare.ACID;
-                    tmpCount++;
+                    CountSquare.CountAcid++;
+                    count--;
                 }
             }
         }
 
         public void AddFoodSquare(Square[][] worldMap, int count)
         {
-            int tmpCount = 0;
-
-            for (int y = 1; y < constants.WorldSizeY - 1; y++)
-            {
-                for (int x = 1; x < constants.WorldSizeX - 1; x++)
-                {
-                    if (worldMap[y][x].NameSquare == NameSquare.FOOD)
-                        tmpCount++;
-                }
-            }
-
-            if (tmpCount >= constants.CountFood)
+            if (CountSquare.CountFood > constants.CountFood)
                 return;
-            else
-                tmpCount = 0;
 
-            while (tmpCount < count)
+            while (count > 0)
             {
                 int y = random.Next(1, constants.WorldSizeY - 1);
                 int x = random.Next(1, constants.WorldSizeX - 1);
@@ -119,7 +100,8 @@ namespace EvolutionGrid.Model
                 if (worldMap[y][x].NameSquare == NameSquare.EMPTY)
                 {
                     worldMap[y][x].NameSquare = NameSquare.FOOD;
-                    tmpCount++;
+                    CountSquare.CountFood++;
+                    count--;
                 }
             }
         }
@@ -201,6 +183,9 @@ namespace EvolutionGrid.Model
                         worldMap[y][x].Health = constants.HealthSquare;
                 }
             }
+
+            CountSquare.CountFood = 0;
+            CountSquare.CountAcid = 0;
         }
 
         public void FillWorldMap(Square[][] worldMap)

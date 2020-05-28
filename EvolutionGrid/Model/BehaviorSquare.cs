@@ -113,9 +113,9 @@ namespace EvolutionGrid.Model
             if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health <= 0 && worldMap[(int)currentPoint.Y][(int)currentPoint.X].NameSquare == NameSquare.BIO)
             {
                 DeleteBio();
-                CountOfLive.CountLiveBio--;
+                CountSquare.CountLiveBio--;
 
-                if (CountOfLive.CountLiveBio == (constants.CountSquare / 8))
+                if (CountSquare.CountLiveBio == (constants.CountSquare / 8))
                     minCountLive = true;
             }
         }
@@ -189,7 +189,9 @@ namespace EvolutionGrid.Model
             if (worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare == NameSquare.FOOD)
             {
                 StepBio((int)newPoint.Y, (int)newPoint.X);
-                
+
+                CountSquare.CountFood--;
+
                 new GeneratorSquare().AddFoodSquare(worldMap, 1);
             }
 
@@ -201,9 +203,10 @@ namespace EvolutionGrid.Model
             if (worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare == NameSquare.ACID)
             {
                 DeleteBio();
-                CountOfLive.CountLiveBio--;
+                CountSquare.CountLiveBio--;
+                CountSquare.CountAcid++;
 
-                if (CountOfLive.CountLiveBio == (constants.CountSquare / 8))
+                if (CountSquare.CountLiveBio == (constants.CountSquare / 8))
                     minCountLive = true;
             }
         }
@@ -238,12 +241,17 @@ namespace EvolutionGrid.Model
 
                 worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health += constants.EnergyFood;
 
+                CountSquare.CountFood--;
+
                 new GeneratorSquare().AddFoodSquare(worldMap, 1);
             }
 
             if (worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare == NameSquare.ACID)
             {
                 worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare = NameSquare.FOOD;
+
+                CountSquare.CountAcid--;
+
                 new GeneratorSquare().AddAcidSquare(worldMap, 1);
             }
         }

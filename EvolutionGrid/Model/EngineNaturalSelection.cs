@@ -86,7 +86,7 @@ namespace EvolutionGrid.Model
         {
             constants = new Constants();
             WorldMap = new Square[constants.WorldSizeY][];
-            CountOfLive.CountLiveBio = constants.CountSquare;
+            CountSquare.CountLiveBio = constants.CountSquare;
             eventSlim = new ManualResetEventSlim(false);
 
             new GeneratorSquare().FillWorldMap(WorldMap);
@@ -125,13 +125,13 @@ namespace EvolutionGrid.Model
                     if (MaxTimeLife < TimeLife)
                         MaxTimeLife = TimeLife;
 
-                    if (CountOfLive.CountLiveBio <= (constants.CountSquare / 8))
+                    if (CountSquare.CountLiveBio <= (constants.CountSquare / 8))
                     {
                         new GeneratorSquare().RefreshSquare(WorldMap);
                         new GeneratorSquare().AddAcidSquare(WorldMap, constants.CountAcid);
                         new GeneratorSquare().AddFoodSquare(WorldMap, constants.CountFood);
                         new GeneratorSquare().AddChild(WorldMap);
-                        CountOfLive.CountLiveBio = constants.CountSquare;
+                        CountSquare.CountLiveBio = constants.CountSquare;
 
                         if (pointX > scale)
                             OffsetX++;
