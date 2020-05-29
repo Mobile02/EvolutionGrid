@@ -101,8 +101,8 @@ namespace EvolutionGrid.Model
             ArrayTimeLife = new int[constants.CountCicle];
 
             Speed = 20;
-
-            new Thread(MainAsync) { IsBackground = true, Priority = ThreadPriority.Normal }.Start();
+            
+            new Thread(MainAsync) { IsBackground = true, Priority = ThreadPriority.AboveNormal }.Start();
             //MainAsync();
         }
 
@@ -120,7 +120,7 @@ namespace EvolutionGrid.Model
                     eventSlim.Wait();
 
                     Thread.Sleep(Speed);
-
+                    
                     new BehaviorSquare(WorldMap);
 
                     TimeLife = i;

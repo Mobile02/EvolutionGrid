@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interactivity;
 using System.Windows.Media;
 
 namespace EvolutionGrid.ViewModel
@@ -137,7 +138,8 @@ namespace EvolutionGrid.ViewModel
             engine.ChangeGenerationProperty += (sender, e) =>
             {
                 Generation = e;
-                App.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, DelegateGrafLife);    //TODO: Убрать!
+                //App.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, DelegateGrafLife);    //TODO: Убрать!
+                GrafLife();
             };
             engine.ChangeMaxTimeLifeProperty += (sender, e) => MaxTimeLife = e;
             engine.ChangeOffsetXProperty += (sender, e) => offsetX = e;
@@ -147,13 +149,16 @@ namespace EvolutionGrid.ViewModel
         private void GrafLife()
         {
             Graf = new PointCollection();
-
+            
             for (int i = 0; i < pointY.Length; i++)
             {
                 if (pointY[i + offsetX] == 0)
                     break;
                 Graf.Add(new Point(i, pointY[i + offsetX]));
+                
             }
+
+            Graf.Freeze();
         }
 
         #region Commands
