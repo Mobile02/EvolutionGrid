@@ -32,7 +32,7 @@ namespace EvolutionGrid.Model
                 { TypeSquare.WALL, () => worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer += 5 }
             };
 
-            //StartAction();
+            StartAction();
         }
 
         public void StartAction()    //TODO: Переделать как было когда то давно, добавить клетке свойство перемещалась или нет в этом цикле

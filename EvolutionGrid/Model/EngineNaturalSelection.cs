@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -114,9 +115,9 @@ namespace EvolutionGrid.Model
                     eventSlim.Wait();
 
                     Thread.Sleep(Speed);
-                    
-                    new BehaviorSquare(WorldMap);
 
+                    new BehaviorSquare(WorldMap);
+                    
                     TimeLife = i;
                     if (MaxTimeLife < TimeLife)
                         MaxTimeLife = TimeLife;
