@@ -103,13 +103,7 @@ namespace EvolutionGrid.Model
             Speed = 20;
             
             new Thread(MainAsync) { IsBackground = true, Priority = ThreadPriority.AboveNormal }.Start();
-            //MainAsync();
         }
-
-        //private async void MainAsync()
-        //{
-        //    await Task.Run(() => Main());
-        //}
 
         private void MainAsync()
         {

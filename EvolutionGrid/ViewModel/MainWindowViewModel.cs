@@ -138,7 +138,6 @@ namespace EvolutionGrid.ViewModel
             engine.ChangeGenerationProperty += (sender, e) =>
             {
                 Generation = e;
-                //App.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, DelegateGrafLife);    //TODO: Убрать!
                 GrafLife();
             };
             engine.ChangeMaxTimeLifeProperty += (sender, e) => MaxTimeLife = e;
@@ -210,7 +209,7 @@ namespace EvolutionGrid.ViewModel
             engine.Stop();
         }
 
-        private void SelectItemCommand_Execute(SquareViewModel parameter)
+        private void SelectItemCommand_Execute(SquareViewModel parameter)     //TODO: Вынести, если можно в модель. Оба метода
         {
             if (InfoSelectSquare != null)
             {

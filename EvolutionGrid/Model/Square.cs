@@ -10,7 +10,6 @@ namespace EvolutionGrid.Model
         private double iD;
 
         private void RaiseTypeSquare(TypeSquare value) => ChangeTypeSquare?.Invoke(this, value);
-        private void RaiseIsSelected(bool value) => ChangeIsSelected?.Invoke(this, value);
         private void RaiseHealth(int value) => ChangeHealth?.Invoke(this, value);
         private void RaiseID(double value) => ChangeID?.Invoke(this, value);
 

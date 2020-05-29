@@ -18,6 +18,7 @@ namespace EvolutionGrid.Model
         private bool minCountLive = false;
         private Dictionary<TypeSquare, DelegateCalcPointer> pointerOffset;
 
+
         public BehaviorSquare(Square[][] worldMap)
         {
             this.worldMap = worldMap;
@@ -31,10 +32,10 @@ namespace EvolutionGrid.Model
                 { TypeSquare.WALL, () => worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer += 5 }
             };
 
-            StartAction();
+            //StartAction();
         }
 
-        private void StartAction()    //TODO: Переделать как было когда то давно, добавить клетке свойство перемещалась или нет в этом цикле
+        public void StartAction()    //TODO: Переделать как было когда то давно, добавить клетке свойство перемещалась или нет в этом цикле
         {
             Square[] tmpArraySquares = new Square[constants.CountSquare];
             int count = 0;
