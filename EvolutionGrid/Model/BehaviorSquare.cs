@@ -34,9 +34,9 @@ namespace EvolutionGrid.Model
             StartAction();
         }
 
-        private void StartAction()
+        private void StartAction()    //TODO: Переделать как было когда то давно, добавить клетке свойство перемещалась или нет в этом цикле
         {
-            Square[] tmpArraySquares = new Square[constants.CountSquare + 100];
+            Square[] tmpArraySquares = new Square[constants.CountSquare];
             int count = 0;
 
             for (int y = 1; y < constants.WorldSizeY - 1; y++)
@@ -53,10 +53,10 @@ namespace EvolutionGrid.Model
             }
 
 
-            for (int i = 0; i < tmpArraySquares.Length; i++)
+            for (int i = 0; i < count; i++)
             {
-                if (tmpArraySquares[i] == null)
-                    return;
+                //if (tmpArraySquares[i] == null)
+                //    return;
 
                 currentPoint.X = tmpArraySquares[i].PointX;
                 currentPoint.Y = tmpArraySquares[i].PointY;
@@ -272,7 +272,6 @@ namespace EvolutionGrid.Model
             worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain = null;
             worldMap[(int)currentPoint.Y][(int)currentPoint.X].EnergyFood = 0;
             worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health = 0;
-            //worldMap[(int)currentPoint.Y][(int)currentPoint.X].IsSelected = false;
         }
 
         private void StepBio(int pointY, int pointX)
@@ -283,7 +282,6 @@ namespace EvolutionGrid.Model
             worldMap[pointY][pointX].Pointer = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer;
             worldMap[pointY][pointX].Health = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health;
             worldMap[pointY][pointX].Direction = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Direction;
-            //worldMap[pointY][pointX].IsSelected = worldMap[(int)currentPoint.Y][(int)currentPoint.X].IsSelected;
 
             DeleteBio();
 
