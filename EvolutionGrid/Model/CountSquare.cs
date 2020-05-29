@@ -11,5 +11,6 @@ namespace EvolutionGrid.Model
         public static int CountLiveBio;
         public static int CountFood;
         public static int CountAcid;
+        public static double ID = 1;
     }
 }

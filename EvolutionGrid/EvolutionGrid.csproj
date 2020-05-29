@@ -86,11 +86,13 @@
     <Compile Include="Model\GeneratorSquare.cs" />
     <Compile Include="Model\Constants.cs" />
     <Compile Include="Model\Direction.cs" />
-    <Compile Include="Model\NameSquare.cs" />
+    <Compile Include="Model\TypeSquare.cs" />
+    <Compile Include="Model\SelectedBrain.cs" />
     <Compile Include="Model\Square.cs" />
     <Compile Include="ViewModel\BoolToColorConverter.cs" />
     <Compile Include="ViewModel\ColorConverter.cs" />
-    <Compile Include="ViewModel\NameToColorConverter.cs" />
+    <Compile Include="ViewModel\SquareViewModel.cs" />
+    <Compile Include="ViewModel\TypeToColorConverter.cs" />
     <Compile Include="ViewModel\TextConverter.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="View\MainWindow.xaml.cs">

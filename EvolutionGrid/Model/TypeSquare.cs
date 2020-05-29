@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionGrid.Model
 {
-    public enum NameSquare
+    public enum TypeSquare
     {
         BIO,
         FOOD,

@@ -12,18 +12,17 @@
     ResizeMode="NoResize"
     ScrollViewer.VerticalScrollBarVisibility="Disabled"
     SizeToContent="WidthAndHeight"
-    mc:Ignorable="d">
-    <!--  xmlns:model="clr-namespace:EvolutionGrid.Model"  -->
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance user:MainWindowViewModel}">
 
     <Grid>
         <ItemsControl ItemsSource="{Binding WorldMap, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <ItemsControl.Resources>
-                <user:TextConverter x:Key="TxtConvert" />
-                <user:NameToColorConverter x:Key="NameToColorConvert" />
+                <user:TypeToColorConverter x:Key="TypeToColorConvert" />
                 <user:BoolToColorConverter x:Key="BoolToColorConvert" />
             </ItemsControl.Resources>
             <ItemsControl.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate DataType="{x:Type user:SquareViewModel}">
                     <ItemsControl ItemsSource="{Binding UpdateSourceTrigger=PropertyChanged}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -40,7 +39,7 @@
                                                 Height="15"
                                                 Margin="1"
                                                 Background="WhiteSmoke">
-                                                <Grid Background="{Binding NameSquare, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource NameToColorConvert}}">
+                                                <Grid Background="{Binding Type, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeToColorConvert}}">
                                                     <Border Background="{Binding IsSelected, Converter={StaticResource BoolToColorConvert}, UpdateSourceTrigger=PropertyChanged}" />
                                                 </Grid>
                                                 <TextBlock
@@ -49,7 +48,7 @@
                                                     VerticalAlignment="Center"
                                                     FontSize="10"
                                                     Foreground="White"
-                                                    Text="{Binding Health, Converter={StaticResource TxtConvert}}" />
+                                                    Text="{Binding Health}" />
                                             </Grid>
                                         </ControlTemplate>
                                     </Button.Template>
@@ -178,7 +177,47 @@
             Content="+"
             FontSize="16"
             FontWeight="Bold" />
-
+        <!--На будущее, пока не готово-->
+        <Grid
+            Grid.RowSpan="2"
+            Grid.Column="1"
+            Margin="30,0,0,110"
+            VerticalAlignment="Bottom" HorizontalAlignment="Left">
+            <ItemsControl ItemsSource="{Binding SelectedBrains, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl.Resources>
+                    <user:BoolToColorConverter x:Key="BoolToColorConvert" />
+                </ItemsControl.Resources>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ItemsControl ItemsSource="{Binding UpdateSourceTrigger=PropertyChanged}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel IsItemsHost="True" Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid
+                                        Width="15"
+                                        Height="15"
+                                        Margin="1"
+                                        Background="Blue">
+                                            <Border Background="{Binding IsSelected, Converter={StaticResource BoolToColorConvert}, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock
+                                            Margin="2"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            FontSize="10"
+                                            Foreground="White"
+                                            Text="{Binding Content}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="200" />

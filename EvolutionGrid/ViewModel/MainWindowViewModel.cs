@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight.CommandWpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,7 @@ namespace EvolutionGrid.ViewModel
 
         Action DelegateGrafLife;
 
-        private Square[][] worldMap;
+        private SquareViewModel[][] worldMap;
         private Constants constants;
         private int generation;
         private int speed;
@@ -35,7 +36,8 @@ namespace EvolutionGrid.ViewModel
         private int[] pointY;
         private int offsetX = 0;
         private int widthGraf;
-        private Square infoSelectSquare;
+        private SquareViewModel infoSelectSquare;
+        private double iDSelected;
 
 
         public int WidthGraf
@@ -48,7 +50,7 @@ namespace EvolutionGrid.ViewModel
             }
         }
 
-        public Square InfoSelectSquare
+        public SquareViewModel InfoSelectSquare
         {
             get { return infoSelectSquare; }
             set
@@ -109,7 +111,7 @@ namespace EvolutionGrid.ViewModel
             }
         }
 
-        public Square[][] WorldMap
+        public SquareViewModel[][] WorldMap
         {
             get { return worldMap; }
             set
@@ -124,23 +126,22 @@ namespace EvolutionGrid.ViewModel
             DelegateGrafLife = GrafLife;
             constants = new Constants();
             pointY = new int[constants.CountCicle];
-            WorldMap = new Square[constants.WorldSizeY][];
+            WorldMap = new SquareViewModel[constants.WorldSizeY][];
 
             engine = new EngineNaturalSelection();
-            WorldMap = engine.WorldMap;
+            WorldMap = engine.WorldMap.Select(squares => squares.Select(square => new SquareViewModel(square)).ToArray()).ToArray(); //TODO: Разобраться, какая то магия, что делает понятно, а как нет.
 
             WidthGraf = (int)(constants.WorldSizeX * 15 + (constants.WorldSizeX * 1.5));
             pointY = engine.ArrayTimeLife;
-            
-            engine.ChangeGenerationProperty += (sender, e) => 
-            { 
+
+            engine.ChangeGenerationProperty += (sender, e) =>
+            {
                 Generation = e;
-                App.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, DelegateGrafLife);
+                App.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, DelegateGrafLife);    //TODO: Убрать!
             };
             engine.ChangeMaxTimeLifeProperty += (sender, e) => MaxTimeLife = e;
             engine.ChangeOffsetXProperty += (sender, e) => offsetX = e;
-            engine.ChangeSquareProperty += (sender, e) => InfoSelectSquare = e;
-            engine.ChangeTimeLifeProperty += (sender, e) => TimeLife = e;
+            engine.ChangeTimeLifeProperty += (sender, e) => { TimeLife = e; if (iDSelected != 0) RefreshSelectedSquare(); };
         }
 
         private void GrafLife()
@@ -156,7 +157,7 @@ namespace EvolutionGrid.ViewModel
         }
 
         #region Commands
-        
+
         public ICommand ComStart
         {
             get
@@ -186,7 +187,7 @@ namespace EvolutionGrid.ViewModel
             get
             {
                 if (selectItemCommand == null)
-                    return selectItemCommand = new RelayCommand<Square>(SelectItemCommand_Execute);
+                    return selectItemCommand = new RelayCommand<SquareViewModel>(SelectItemCommand_Execute);
 
                 return selectItemCommand;
             }
@@ -204,9 +205,48 @@ namespace EvolutionGrid.ViewModel
             engine.Stop();
         }
 
-        private void SelectItemCommand_Execute(Square parameter)
+        private void SelectItemCommand_Execute(SquareViewModel parameter)
         {
-            engine.SelectItemCommand_Execute(parameter);
+            if (InfoSelectSquare != null)
+            {
+                InfoSelectSquare.IsSelected = false;
+                iDSelected = 0;
+            } 
+
+            if (parameter.Type == TypeSquare.BIO)
+            {
+                parameter.IsSelected = true;
+                InfoSelectSquare = parameter;
+                iDSelected = parameter.ID;
+            }
+            else
+            {
+                InfoSelectSquare = null;
+                parameter = null;
+                iDSelected = 0;
+            }
+        }
+
+        private void RefreshSelectedSquare()
+        {
+            bool die = true;
+
+            for (int y = 1; y < constants.WorldSizeY - 1; y++)
+            {
+                for (int x = 1; x < constants.WorldSizeX - 1; x++)
+                {
+                    WorldMap[y][x].IsSelected = false;
+
+                    if (WorldMap[y][x].ID == iDSelected && WorldMap[y][x].ID != 0)
+                    {
+                        WorldMap[y][x].IsSelected = true;
+                        InfoSelectSquare = WorldMap[y][x];
+                        die = false;
+                    }     
+                }
+            }
+
+            if (die) iDSelected = 0;
         }
     }
 }

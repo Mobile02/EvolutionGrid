@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -19,7 +20,8 @@ namespace EvolutionGrid.Model
         private int maxTimeLife;
         private Square infoSelectSquare;
 
-        
+
+
         private void RaiseOffsetXProperty(int value) => ChangeOffsetXProperty?.Invoke(this, value);
         private void RaiseTimeLifeProperty(int value) => ChangeTimeLifeProperty?.Invoke(this, value);
         private void RaiseGenerationProperty(int value) => ChangeGenerationProperty?.Invoke(this, value);
@@ -82,6 +84,7 @@ namespace EvolutionGrid.Model
         public Square[][] WorldMap { get; set; }
         public int Speed { get; set; }
 
+
         public EngineNaturalSelection()
         {
             constants = new Constants();
@@ -99,15 +102,16 @@ namespace EvolutionGrid.Model
 
             Speed = 20;
 
-            MainAsync();
+            new Thread(MainAsync) { IsBackground = true, Priority = ThreadPriority.Normal }.Start();
+            //MainAsync();
         }
 
-        private async void MainAsync()
-        {
-            await Task.Run(() => Main());
-        }
+        //private async void MainAsync()
+        //{
+        //    await Task.Run(() => Main());
+        //}
 
-        private void Main()
+        private void MainAsync()
         {
             for (int gen = 0; gen < constants.CountCicle; gen++)
             {
@@ -115,11 +119,9 @@ namespace EvolutionGrid.Model
                 {
                     eventSlim.Wait();
 
-                    new BehaviorSquare(WorldMap);
-
-                    RefreshInfoSelectSquare();
-
                     Thread.Sleep(Speed);
+
+                    new BehaviorSquare(WorldMap);
 
                     TimeLife = i;
                     if (MaxTimeLife < TimeLife)
@@ -146,20 +148,6 @@ namespace EvolutionGrid.Model
             }
         }
 
-        private void RefreshInfoSelectSquare()
-        {
-            InfoSelectSquare = null;
-
-            for (int y = 1; y < constants.WorldSizeY - 1; y++)
-            {
-                for (int x = 1; x < constants.WorldSizeX - 1; x++)
-                {
-                    if (WorldMap[y][x].IsSelected)
-                        InfoSelectSquare = WorldMap[y][x];
-                }
-            }
-        }
-
         public void Start()
         {
             eventSlim.Set();
@@ -169,29 +157,6 @@ namespace EvolutionGrid.Model
         {
             eventSlim.Reset();
             new FileOperation().SaveTimeLife(ArrayTimeLife);
-        }
-
-        public void SelectItemCommand_Execute(Square parameter)
-        {
-            for (int y = 1; y < constants.WorldSizeY - 1; y++)
-            {
-                for (int x = 1; x < constants.WorldSizeX - 1; x++)
-                {
-                    if (WorldMap[y][x].IsSelected)
-                        WorldMap[y][x].IsSelected = false;
-                }
-            }
-
-            if (parameter.NameSquare == NameSquare.BIO)
-            {
-                parameter.IsSelected = true;
-                InfoSelectSquare = parameter;
-            }
-            else
-            {
-                InfoSelectSquare = null;
-                parameter = null;
-            }
         }
     }
 }

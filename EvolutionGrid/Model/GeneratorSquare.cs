@@ -38,7 +38,7 @@ namespace EvolutionGrid.Model
 
             brainMutant = (int[])square.Brain.Clone();
 
-            if (random.Next(8) == 2 || random.Next(8) == 7)
+            if (random.Next(8) == 2 || random.Next(8) == 7 || random.Next(8) == 4)
                 brainMutant[random.Next(constants.SizeBrain)] = random.Next(constants.SizeBrain);
 
             return (int[])brainMutant.Clone();
@@ -53,9 +53,10 @@ namespace EvolutionGrid.Model
                 y = random.Next(1, constants.WorldSizeY - 1);
                 x = random.Next(1, constants.WorldSizeX - 1);
 
-                if (worldMap[y][x].NameSquare == NameSquare.EMPTY)
+                if (worldMap[y][x].TypeSquare == TypeSquare.EMPTY)
                 {
-                    worldMap[y][x].NameSquare = NameSquare.BIO;
+                    worldMap[y][x].ID = CountSquare.ID;
+                    worldMap[y][x].TypeSquare = TypeSquare.BIO;
                     worldMap[y][x].Health = constants.HealthSquare;
                     worldMap[y][x].Direction = (Direction)random.Next(8);
                     worldMap[y][x].Pointer = 0;
@@ -63,6 +64,7 @@ namespace EvolutionGrid.Model
                     worldMap[y][x].PointY = y;
                     worldMap[y][x].Brain = GeneratorBrain();
 
+                    CountSquare.ID++;
                     count--;
                 }
             }
@@ -78,9 +80,9 @@ namespace EvolutionGrid.Model
                 int y = random.Next(1, constants.WorldSizeY - 1);
                 int x = random.Next(1, constants.WorldSizeX - 1);
 
-                if (worldMap[y][x].NameSquare == NameSquare.EMPTY)
+                if (worldMap[y][x].TypeSquare == TypeSquare.EMPTY)
                 {
-                    worldMap[y][x].NameSquare = NameSquare.ACID;
+                    worldMap[y][x].TypeSquare = TypeSquare.ACID;
                     CountSquare.CountAcid++;
                     count--;
                 }
@@ -97,9 +99,9 @@ namespace EvolutionGrid.Model
                 int y = random.Next(1, constants.WorldSizeY - 1);
                 int x = random.Next(1, constants.WorldSizeX - 1);
 
-                if (worldMap[y][x].NameSquare == NameSquare.EMPTY)
+                if (worldMap[y][x].TypeSquare == TypeSquare.EMPTY)
                 {
-                    worldMap[y][x].NameSquare = NameSquare.FOOD;
+                    worldMap[y][x].TypeSquare = TypeSquare.FOOD;
                     CountSquare.CountFood++;
                     count--;
                 }
@@ -108,7 +110,7 @@ namespace EvolutionGrid.Model
 
         public void AddChild(Square[][] worldMap)
         {
-            //new FileOperation().SaveBrain(worldMap);
+            new FileOperation().SaveBrain(worldMap);
 
             Square[] arraySquares = new Square[constants.CountSquare / 8];
 
@@ -117,7 +119,7 @@ namespace EvolutionGrid.Model
             {
                 for (int x = 1; x < constants.WorldSizeX - 1; x++)
                 {
-                    if (worldMap[y][x].NameSquare == NameSquare.BIO)
+                    if (worldMap[y][x].TypeSquare == TypeSquare.BIO)
                     {
                         arraySquares[count] = (Square)worldMap[y][x].Clone();
 
@@ -135,9 +137,10 @@ namespace EvolutionGrid.Model
                     int x = random.Next(1, constants.WorldSizeX - 1);
                     int y = random.Next(1, constants.WorldSizeY - 1);
 
-                    if (worldMap[y][x].NameSquare == NameSquare.EMPTY)
+                    if (worldMap[y][x].TypeSquare == TypeSquare.EMPTY)
                     {
-                        worldMap[y][x].NameSquare = NameSquare.BIO;
+                        worldMap[y][x].ID = CountSquare.ID;
+                        worldMap[y][x].TypeSquare = TypeSquare.BIO;
                         worldMap[y][x].Health = constants.HealthSquare;
                         worldMap[y][x].Direction = (Direction)random.Next(8);
                         worldMap[y][x].Pointer = 0;
@@ -145,6 +148,7 @@ namespace EvolutionGrid.Model
                         worldMap[y][x].PointY = y;
                         worldMap[y][x].Brain = GeneratorBrainMutant(arraySquares[i]);
 
+                        CountSquare.ID++;
                         tmpCount++;
                     }
                 }
@@ -158,9 +162,9 @@ namespace EvolutionGrid.Model
                 int y = random.Next(1, constants.WorldSizeY - 1);
                 int x = random.Next(1, constants.WorldSizeX - 1);
 
-                if (worldMap[y][x].NameSquare == NameSquare.EMPTY)
+                if (worldMap[y][x].TypeSquare == TypeSquare.EMPTY)
                 {
-                    worldMap[y][x].NameSquare = NameSquare.WALL;
+                    worldMap[y][x].TypeSquare = TypeSquare.WALL;
                     count--;
                 }
             }
@@ -172,14 +176,14 @@ namespace EvolutionGrid.Model
             {
                 for (int x = 1; x < constants.WorldSizeX - 1; x++)
                 {
-                    if (worldMap[y][x].NameSquare != NameSquare.WALL && worldMap[y][x].NameSquare != NameSquare.BIO)
+                    if (worldMap[y][x].TypeSquare != TypeSquare.WALL && worldMap[y][x].TypeSquare != TypeSquare.BIO)
                     {
-                        worldMap[y][x].NameSquare = NameSquare.EMPTY;
+                        worldMap[y][x].TypeSquare = TypeSquare.EMPTY;
                         worldMap[y][x].Pointer = 0;
                         worldMap[y][x].Brain = null;
                     }
 
-                    if (worldMap[y][x].NameSquare == NameSquare.BIO)
+                    if (worldMap[y][x].TypeSquare == TypeSquare.BIO)
                         worldMap[y][x].Health = constants.HealthSquare;
                 }
             }
@@ -200,7 +204,7 @@ namespace EvolutionGrid.Model
                     {
                         PointX = x,
                         PointY = y,
-                        NameSquare = NameSquare.EMPTY
+                        TypeSquare = TypeSquare.EMPTY
                     };
 
                     if (y == 0 || y == constants.WorldSizeY - 1)
@@ -208,14 +212,14 @@ namespace EvolutionGrid.Model
                         {
                             PointX = x,
                             PointY = y,
-                            NameSquare = NameSquare.WALL
+                            TypeSquare = TypeSquare.WALL
                         };
                     if (x == 0 || x == constants.WorldSizeX - 1)
                         worldMap[y][x] = new Square
                         {
                             PointX = x,
                             PointY = y,
-                            NameSquare = NameSquare.WALL
+                            TypeSquare = TypeSquare.WALL
                         };
                 }
             }

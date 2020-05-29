@@ -10,7 +10,7 @@ using System.Windows.Media;
 
 namespace EvolutionGrid.ViewModel
 {
-    public class NameToColorConverter : IValueConverter
+    public class TypeToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -18,19 +18,19 @@ namespace EvolutionGrid.ViewModel
             
             switch (value)
             {
-                case NameSquare.BIO:
+                case TypeSquare.BIO:
                     brushes = Brushes.Blue;
                     break;
-                case NameSquare.FOOD:
+                case TypeSquare.FOOD:
                     brushes = Brushes.Green;
                     break;
-                case NameSquare.ACID:
+                case TypeSquare.ACID:
                     brushes = Brushes.Red;
                     break;
-                case NameSquare.EMPTY:
+                case TypeSquare.EMPTY:
                     brushes = Brushes.WhiteSmoke;
                     break;
-                case NameSquare.WALL:
+                case TypeSquare.WALL:
                     brushes = Brushes.Gray;
                     break;
             }

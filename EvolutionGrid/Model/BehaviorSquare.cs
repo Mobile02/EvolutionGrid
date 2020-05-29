@@ -1,12 +1,10 @@
-﻿using EvolutionGrid.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
 
 namespace EvolutionGrid.Model
 {
@@ -18,19 +16,19 @@ namespace EvolutionGrid.Model
         private Constants constants = new Constants();
         private Point currentPoint = new Point();
         private bool minCountLive = false;
-        private Dictionary<NameSquare, DelegateCalcPointer> pointerOffset;
+        private Dictionary<TypeSquare, DelegateCalcPointer> pointerOffset;
 
         public BehaviorSquare(Square[][] worldMap)
         {
             this.worldMap = worldMap;
 
-            pointerOffset = new Dictionary<NameSquare, DelegateCalcPointer>
+            pointerOffset = new Dictionary<TypeSquare, DelegateCalcPointer>
             {
-                { NameSquare.ACID, () => worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer++ },
-                { NameSquare.FOOD, () => worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer += 2 },
-                { NameSquare.BIO, () => worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer += 3 },
-                { NameSquare.EMPTY, () => worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer += 4 },
-                { NameSquare.WALL, () => worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer += 5 }
+                { TypeSquare.ACID, () => worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer++ },
+                { TypeSquare.FOOD, () => worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer += 2 },
+                { TypeSquare.BIO, () => worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer += 3 },
+                { TypeSquare.EMPTY, () => worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer += 4 },
+                { TypeSquare.WALL, () => worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer += 5 }
             };
 
             StartAction();
@@ -45,7 +43,7 @@ namespace EvolutionGrid.Model
             {
                 for (int x = 0; x < constants.WorldSizeX - 1; x++)
                 {
-                    if (worldMap[y][x].NameSquare == NameSquare.BIO)
+                    if (worldMap[y][x].TypeSquare == TypeSquare.BIO)
                     {
                         tmpArraySquares[count] = worldMap[y][x];
 
@@ -82,8 +80,11 @@ namespace EvolutionGrid.Model
 
                 if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain[worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer] > 7
                     && worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain[worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer] < 16)
+                {
                     Turn();
-
+                    continue;
+                }
+                    
                 if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain[worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer] > 15
                     && worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain[worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer] < 24)
                 {
@@ -93,13 +94,17 @@ namespace EvolutionGrid.Model
 
                 if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain[worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer] > 23
                     && worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain[worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer] < 32)
+                {
                     Check(worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain[worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer] - 24);
-
+                    continue;
+                }
+                    
                 if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain[worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer] > 31)
                 {
                     worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer += worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain[worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer];
                     if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer >= constants.SizeBrain)
                         worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer -= constants.SizeBrain;
+                    continue;
                 }
             }
 
@@ -110,7 +115,7 @@ namespace EvolutionGrid.Model
             if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health > 99)
                 worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health = 99;
 
-            if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health <= 0 && worldMap[(int)currentPoint.Y][(int)currentPoint.X].NameSquare == NameSquare.BIO)
+            if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health <= 0 && worldMap[(int)currentPoint.Y][(int)currentPoint.X].TypeSquare == TypeSquare.BIO)
             {
                 DeleteBio();
                 CountSquare.CountLiveBio--;
@@ -170,7 +175,7 @@ namespace EvolutionGrid.Model
             newPoint.X = x;
             newPoint.Y = y;
 
-            pointerOffset[worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare]();
+            pointerOffset[worldMap[(int)newPoint.Y][(int)newPoint.X].TypeSquare]();
 
             if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer >= constants.SizeBrain)
                 worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer -= constants.SizeBrain;
@@ -186,7 +191,7 @@ namespace EvolutionGrid.Model
 
             newPoint = Check(worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain[worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer]);
 
-            if (worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare == NameSquare.FOOD)
+            if (worldMap[(int)newPoint.Y][(int)newPoint.X].TypeSquare == TypeSquare.FOOD)
             {
                 StepBio((int)newPoint.Y, (int)newPoint.X);
 
@@ -195,14 +200,17 @@ namespace EvolutionGrid.Model
                 new GeneratorSquare().AddFoodSquare(worldMap, 1);
             }
 
-            if (worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare == NameSquare.EMPTY)
+            if (worldMap[(int)newPoint.Y][(int)newPoint.X].TypeSquare == TypeSquare.EMPTY)
             {
                 StepBio((int)newPoint.Y, (int)newPoint.X);
             }
 
-            if (worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare == NameSquare.ACID)
+            if (worldMap[(int)newPoint.Y][(int)newPoint.X].TypeSquare == TypeSquare.ACID)
             {
                 DeleteBio();
+
+                worldMap[(int)currentPoint.Y][(int)currentPoint.X].TypeSquare = TypeSquare.ACID;
+
                 CountSquare.CountLiveBio--;
                 CountSquare.CountAcid++;
 
@@ -231,12 +239,12 @@ namespace EvolutionGrid.Model
             Point newPoint = new Point();
             newPoint = Check(worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain[worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer] - 16);
 
-            if (worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare == NameSquare.EMPTY || worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare == NameSquare.WALL)
+            if (worldMap[(int)newPoint.Y][(int)newPoint.X].TypeSquare == TypeSquare.EMPTY || worldMap[(int)newPoint.Y][(int)newPoint.X].TypeSquare == TypeSquare.WALL)
                 return;
 
-            if (worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare == NameSquare.FOOD)
+            if (worldMap[(int)newPoint.Y][(int)newPoint.X].TypeSquare == TypeSquare.FOOD)
             {
-                worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare = NameSquare.EMPTY;
+                worldMap[(int)newPoint.Y][(int)newPoint.X].TypeSquare = TypeSquare.EMPTY;
                 worldMap[(int)newPoint.Y][(int)newPoint.X].EnergyFood = 0;
 
                 worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health += constants.EnergyFood;
@@ -246,9 +254,9 @@ namespace EvolutionGrid.Model
                 new GeneratorSquare().AddFoodSquare(worldMap, 1);
             }
 
-            if (worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare == NameSquare.ACID)
+            if (worldMap[(int)newPoint.Y][(int)newPoint.X].TypeSquare == TypeSquare.ACID)
             {
-                worldMap[(int)newPoint.Y][(int)newPoint.X].NameSquare = NameSquare.FOOD;
+                worldMap[(int)newPoint.Y][(int)newPoint.X].TypeSquare = TypeSquare.FOOD;
 
                 CountSquare.CountAcid--;
                 CountSquare.CountFood++;
@@ -259,21 +267,23 @@ namespace EvolutionGrid.Model
 
         private void DeleteBio()
         {
-            worldMap[(int)currentPoint.Y][(int)currentPoint.X].NameSquare = NameSquare.EMPTY;
+            worldMap[(int)currentPoint.Y][(int)currentPoint.X].ID = 0;
+            worldMap[(int)currentPoint.Y][(int)currentPoint.X].TypeSquare = TypeSquare.EMPTY;
             worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain = null;
             worldMap[(int)currentPoint.Y][(int)currentPoint.X].EnergyFood = 0;
             worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health = 0;
-            worldMap[(int)currentPoint.Y][(int)currentPoint.X].IsSelected = false;
+            //worldMap[(int)currentPoint.Y][(int)currentPoint.X].IsSelected = false;
         }
 
         private void StepBio(int pointY, int pointX)
         {
+            worldMap[pointY][pointX].ID = worldMap[(int)currentPoint.Y][(int)currentPoint.X].ID;
             worldMap[pointY][pointX].Brain = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain;
-            worldMap[pointY][pointX].NameSquare = NameSquare.BIO;
+            worldMap[pointY][pointX].TypeSquare = TypeSquare.BIO;
             worldMap[pointY][pointX].Pointer = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer;
             worldMap[pointY][pointX].Health = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health;
             worldMap[pointY][pointX].Direction = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Direction;
-            worldMap[pointY][pointX].IsSelected = worldMap[(int)currentPoint.Y][(int)currentPoint.X].IsSelected;
+            //worldMap[pointY][pointX].IsSelected = worldMap[(int)currentPoint.Y][(int)currentPoint.X].IsSelected;
 
             DeleteBio();
 

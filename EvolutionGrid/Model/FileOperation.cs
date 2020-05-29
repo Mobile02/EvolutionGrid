@@ -18,7 +18,7 @@ namespace EvolutionGrid.Model
             {
                 for (int x = 1; x < constants.WorldSizeX - 1; x++)
                 {
-                    if (worldMap[y][x].NameSquare == NameSquare.BIO)
+                    if (worldMap[y][x].TypeSquare == TypeSquare.BIO)
                     {
                         using (StreamWriter streamWriter = new StreamWriter("brain.txt", true))
                         {

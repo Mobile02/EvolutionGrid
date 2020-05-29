@@ -3,83 +3,30 @@ using System;
 
 namespace EvolutionGrid.Model
 {
-    public class Square : ViewModelBase, ICloneable
+    public class Square : ICloneable
     {
-        private int pointx;
-        private int pointy;
-        private int width;
-        private int height;
-        private ColorSquare fill;
-        private int energyFood;
         private int health;
-        private Direction direction;
-        private int[] brain;
-        private int pointer;
-        private NameSquare nameSquare;
-        private bool isSelected;
+        private TypeSquare typeSquare;
+        private double iD;
+
+        private void RaiseTypeSquare(TypeSquare value) => ChangeTypeSquare?.Invoke(this, value);
+        private void RaiseIsSelected(bool value) => ChangeIsSelected?.Invoke(this, value);
+        private void RaiseHealth(int value) => ChangeHealth?.Invoke(this, value);
+        private void RaiseID(double value) => ChangeID?.Invoke(this, value);
+
+        public event EventHandler<TypeSquare> ChangeTypeSquare;
+        public event EventHandler<bool> ChangeIsSelected;
+        public event EventHandler<int> ChangeHealth;
+        public event EventHandler<double> ChangeID;
 
 
-        public bool IsSelected
+        public double ID
         {
-            get { return isSelected; }
+            get { return iD; }
             set
             {
-                isSelected = value;
-                RaisePropertyChanged("IsSelected");
-            }
-        }
-        public int PointX
-        {
-            get { return pointx; }
-            set
-            {
-                pointx = value;
-                RaisePropertyChanged("PointX");
-            }
-        }
-        public int PointY
-        {
-            get { return pointy; }
-            set
-            {
-                pointy = value;
-                RaisePropertyChanged("PointY");
-            }
-        }
-        public int Width
-        {
-            get { return width; }
-            set
-            {
-                width = value;
-                RaisePropertyChanged("Width");
-            }
-        }
-        public int Height
-        {
-            get { return height; }
-            set
-            {
-                height = value;
-                RaisePropertyChanged("Height");
-            }
-        }
-        public ColorSquare Fill
-        {
-            get { return fill; }
-            set
-            {
-                fill = value;
-                RaisePropertyChanged("Fill");
-            }
-        }
-        public int EnergyFood
-        {
-            get { return energyFood; }
-            set
-            {
-                energyFood = value;
-                RaisePropertyChanged("EnergyFood");
+                iD = value;
+                RaiseID(ID);
             }
         }
         public int Health
@@ -88,46 +35,26 @@ namespace EvolutionGrid.Model
             set
             {
                 health = value;
-                RaisePropertyChanged("Health");
+                RaiseHealth(Health);
             }
         }
-        public Direction Direction
+        public TypeSquare TypeSquare
         {
-            get { return direction; }
+            get { return typeSquare; }
             set
             {
-                direction = value;
-                RaisePropertyChanged("Direction");
+                typeSquare = value;
+                RaiseTypeSquare(TypeSquare);
             }
         }
-        public int[] Brain
-        {
-            get { return brain; }
-            set
-            {
-                brain = value;
-                RaisePropertyChanged("Brain");
-            }
-        }
-        public int Pointer
-        {
-            get { return pointer; }
-            set
-            {
-                pointer = value;
-                RaisePropertyChanged("Pointer");
-            }
-        }
-        public NameSquare NameSquare
-        {
-            get { return nameSquare; }
-            set
-            {
-                nameSquare = value;
-                RaisePropertyChanged("NameSquare");
-            }
-        }
-
+        public Direction Direction { get; set; }
+        public int[] Brain { get; set; }
+        public int Pointer { get; set; }
+        public int PointX { get; set; }
+        public int PointY { get; set; }
+        public ColorSquare Fill { get; set; }
+        public int EnergyFood { get; set; }
+        
         public object Clone()
         {
             return this.MemberwiseClone();
