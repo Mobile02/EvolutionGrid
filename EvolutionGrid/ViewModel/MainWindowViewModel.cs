@@ -23,8 +23,6 @@ namespace EvolutionGrid.ViewModel
         private ICommand cStop;
         private ICommand selectItemCommand;
 
-        Action DelegateGrafLife;
-
         private SquareViewModel[][] worldMap;
         private Constants constants;
         private int generation;
@@ -122,7 +120,6 @@ namespace EvolutionGrid.ViewModel
 
         public MainWindowViewModel()
         {
-            DelegateGrafLife = GrafLife;
             constants = new Constants();
             pointY = new int[constants.CountCicle];
             WorldMap = new SquareViewModel[constants.WorldSizeY][];
@@ -136,24 +133,19 @@ namespace EvolutionGrid.ViewModel
             engine.ChangeGenerationProperty += (sender, e) =>
             {
                 Generation = e;
-                GrafLife();
+                UpdateChartLife();
             };
             engine.ChangeMaxTimeLifeProperty += (sender, e) => MaxTimeLife = e;
             engine.ChangeOffsetXProperty += (sender, e) => offsetX = e;
             engine.ChangeTimeLifeProperty += (sender, e) => { TimeLife = e; if (iDSelected != 0) RefreshSelectedSquare(); };
+
+            ChartTimeLife = new ObservableCollection<Point>();
         }
 
-        private void GrafLife()  //TODO: Не забыть вынести
+        private void UpdateChartLife()
         {
-            ChartTimeLife = new ObservableCollection<Point>();
-            
-            for (int i = 0; i < pointY.Length; i++)
-            {
-                if (pointY[i + offsetX] == 0)
-                    break;
-                ChartTimeLife.Add(new Point(i, pointY[i + offsetX]));
-                
-            }
+            ChartTimeLife.Clear();
+            ChartTimeLife = new ChartLife().UpdateChart(pointY, offsetX);
         }
 
         #region Commands

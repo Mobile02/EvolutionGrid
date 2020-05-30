@@ -79,6 +79,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\BehaviorSquare.cs" />
+    <Compile Include="Model\ChartLife.cs" />
     <Compile Include="Model\ColorSquare.cs" />
     <Compile Include="Model\CountSquare.cs" />
     <Compile Include="Model\EngineNaturalSelection.cs" />
