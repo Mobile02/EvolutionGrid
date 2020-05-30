@@ -10,15 +10,19 @@ namespace EvolutionGrid.Model
 {
     public class ChartLife
     {
-        public ObservableCollection<Point> UpdateChart(int[] pointY, int offsetX)
+        public ObservableCollection<int[]> UpdateChart(int[] pointY, int offsetX)
         {
-            ObservableCollection<Point> points = new ObservableCollection<Point>();
+            ObservableCollection<int[]> points = new ObservableCollection<int[]>();
+
+            int[] point = new int[2];
 
             for (int pointX = 0; pointX < pointY.Length; pointX++)
             {
                 if (pointY[pointX + offsetX] == 0)
                     break;
-                points.Add(new Point(pointX, pointY[pointX + offsetX]));
+                point[0] = pointX ;
+                point[1] = pointY[pointX];
+                points.Add((int[])point.Clone());
 
             }
 

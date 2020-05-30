@@ -42,7 +42,7 @@
                                                 Margin="1"
                                                 Background="WhiteSmoke">
                                                 <Grid Background="{Binding Type, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeToColorConvert}}">
-                                                    <Border Background="{Binding IsSelected, Converter={StaticResource BoolToColorConvert}, UpdateSourceTrigger=PropertyChanged}" />
+                                                    <Border Background="{Binding IsSelected, Converter={StaticResource BoolToColorConvert}}" />
                                                 </Grid>
                                                 <TextBlock
                                                     Margin="2"
@@ -113,7 +113,7 @@
         <Polyline
             Grid.Row="1"
             Grid.Column="0"
-            Width="{Binding WidthGraf, UpdateSourceTrigger=PropertyChanged}"
+            Width="{Binding WidthChart, UpdateSourceTrigger=PropertyChanged}"
             Margin="10"
             HorizontalAlignment="Left"
             Points="{Binding ChartTimeLife, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ObservableToPointCollectionConvert}}"
@@ -150,7 +150,7 @@
             Margin="10.4,10,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Content="{Binding InfoSelectSquare.Health}" />
+            Content="{Binding SelectedSquare.Health}" />
         <Slider
             Grid.Column="1"
             Width="182"

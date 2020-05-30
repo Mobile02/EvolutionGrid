@@ -10,7 +10,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 
 namespace EvolutionGrid.ViewModel
@@ -29,15 +28,26 @@ namespace EvolutionGrid.ViewModel
         private int speed;
         private int timeLife;
         private int maxTimeLife = 0;
-        private ObservableCollection<Point> chartTimeLife;
+        private ObservableCollection<int[]> chartTimeLife;
         private int[] pointY;
         private int offsetX = 0;
         private int widthGraf;
-        private SquareViewModel infoSelectSquare;
+        private SquareViewModel selectedSquare;
         private double iDSelected;
 
 
-        public int WidthGraf
+
+        public double IDSelected
+        {
+            get { return iDSelected; }
+            set
+            {
+                iDSelected = value;
+                RaisePropertyChanged("IDSelected");
+            }
+        }
+
+        public int WidthChart
         {
             get { return widthGraf; }
             set
@@ -47,17 +57,17 @@ namespace EvolutionGrid.ViewModel
             }
         }
 
-        public SquareViewModel InfoSelectSquare
+        public SquareViewModel SelectedSquare
         {
-            get { return infoSelectSquare; }
+            get { return selectedSquare; }
             set
             {
-                infoSelectSquare = value;
+                selectedSquare = value;
                 RaisePropertyChanged("InfoSelectSquare");
             }
         }
 
-        public ObservableCollection<Point> ChartTimeLife
+        public ObservableCollection<int[]> ChartTimeLife
         {
             get { return chartTimeLife; }
             set
@@ -127,19 +137,15 @@ namespace EvolutionGrid.ViewModel
             engine = new EngineNaturalSelection();
             WorldMap = engine.WorldMap.Select(squares => squares.Select(square => new SquareViewModel(square)).ToArray()).ToArray(); //TODO: Разобраться, какая то магия, что делает понятно, а как нет.
 
-            WidthGraf = (int)(constants.WorldSizeX * 15 + (constants.WorldSizeX * 1.5));
+            WidthChart = (int)(constants.WorldSizeX * 15 + (constants.WorldSizeX * 1.5));
             pointY = engine.ArrayTimeLife;
 
-            engine.ChangeGenerationProperty += (sender, e) =>
-            {
-                Generation = e;
-                UpdateChartLife();
-            };
+            engine.ChangeGenerationProperty += (sender, e) => { Generation = e; UpdateChartLife(); };
             engine.ChangeMaxTimeLifeProperty += (sender, e) => MaxTimeLife = e;
             engine.ChangeOffsetXProperty += (sender, e) => offsetX = e;
             engine.ChangeTimeLifeProperty += (sender, e) => { TimeLife = e; if (iDSelected != 0) RefreshSelectedSquare(); };
 
-            ChartTimeLife = new ObservableCollection<Point>();
+            ChartTimeLife = new ObservableCollection<int[]>();
         }
 
         private void UpdateChartLife()
@@ -199,29 +205,29 @@ namespace EvolutionGrid.ViewModel
 
         private void SelectItemCommand_Execute(SquareViewModel parameter)     //TODO: Вынести, если можно в модель. Оба метода
         {
-            if (InfoSelectSquare != null)
+            if (SelectedSquare != null)
             {
-                InfoSelectSquare.IsSelected = false;
-                iDSelected = 0;
-            } 
+                SelectedSquare.IsSelected = false;
+                IDSelected = 0;
+            }
 
             if (parameter.Type == TypeSquare.BIO)
             {
                 parameter.IsSelected = true;
-                InfoSelectSquare = parameter;
-                iDSelected = parameter.ID;
+                SelectedSquare = parameter;
+                IDSelected = parameter.ID;
             }
             else
             {
-                InfoSelectSquare = null;
+                SelectedSquare = null;
                 parameter = null;
-                iDSelected = 0;
+                IDSelected = 0;
             }
         }
 
         private void RefreshSelectedSquare()
         {
-            bool die = true;
+            bool isDie = true;
 
             for (int y = 1; y < constants.WorldSizeY - 1; y++)
             {
@@ -229,16 +235,16 @@ namespace EvolutionGrid.ViewModel
                 {
                     WorldMap[y][x].IsSelected = false;
 
-                    if (WorldMap[y][x].ID == iDSelected && WorldMap[y][x].ID != 0)
+                    if (WorldMap[y][x].ID == IDSelected && WorldMap[y][x].ID != 0)
                     {
                         WorldMap[y][x].IsSelected = true;
-                        InfoSelectSquare = WorldMap[y][x];
-                        die = false;
-                    }     
+                        SelectedSquare = WorldMap[y][x];
+                        isDie = false;
+                    }
                 }
             }
 
-            if (die) iDSelected = 0;
+            if (isDie) IDSelected = 0;
         }
     }
 }

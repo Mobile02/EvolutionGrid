@@ -15,16 +15,16 @@ namespace EvolutionGrid.ViewModel
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            ObservableCollection<Point> points = (ObservableCollection<Point>)value;
+            ObservableCollection<int[]> points = (ObservableCollection<int[]>)value;
 
             if (points == null)
                 return null;
 
             PointCollection pointCollection = new PointCollection();
 
-            foreach (Point point in points)
+            for (int i = 0; i < points.Count(); i++)
             {
-                pointCollection.Add(point);
+                pointCollection.Add(new Point(points.ElementAt(i)[0], points.ElementAt(i)[1]));
             }
 
             return pointCollection;
