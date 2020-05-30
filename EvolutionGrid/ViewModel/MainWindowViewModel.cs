@@ -63,7 +63,7 @@ namespace EvolutionGrid.ViewModel
             set
             {
                 selectedSquare = value;
-                RaisePropertyChanged("InfoSelectSquare");
+                RaisePropertyChanged("SelectedSquare");
             }
         }
 

@@ -14,7 +14,6 @@ namespace EvolutionGrid.Model
         private void RaiseID(double value) => ChangeID?.Invoke(this, value);
 
         public event EventHandler<TypeSquare> ChangeTypeSquare;
-        public event EventHandler<bool> ChangeIsSelected;
         public event EventHandler<int> ChangeHealth;
         public event EventHandler<double> ChangeID;
 

@@ -22,7 +22,6 @@
 
     <Grid>
         <ItemsControl ItemsSource="{Binding WorldMap, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type user:SquareViewModel}">
                     <ItemsControl ItemsSource="{Binding UpdateSourceTrigger=PropertyChanged}">
