@@ -21,7 +21,7 @@ namespace EvolutionGrid.Model
                 if (pointY[pointX + offsetX] == 0)
                     break;
                 point[0] = pointX ;
-                point[1] = pointY[pointX];
+                point[1] = pointY[pointX + offsetX];
                 points.Add((int[])point.Clone());
 
             }
