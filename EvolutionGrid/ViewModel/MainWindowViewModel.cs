@@ -12,8 +12,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Interactivity;
-using System.Windows.Media;
 
 namespace EvolutionGrid.ViewModel
 {
@@ -33,7 +31,7 @@ namespace EvolutionGrid.ViewModel
         private int speed;
         private int timeLife;
         private int maxTimeLife = 0;
-        private PointCollection graf;
+        private ObservableCollection<Point> chartTimeLife;
         private int[] pointY;
         private int offsetX = 0;
         private int widthGraf;
@@ -61,13 +59,13 @@ namespace EvolutionGrid.ViewModel
             }
         }
 
-        public PointCollection Graf
+        public ObservableCollection<Point> ChartTimeLife
         {
-            get { return graf; }
+            get { return chartTimeLife; }
             set
             {
-                graf = value;
-                RaisePropertyChanged("Graf");
+                chartTimeLife = value;
+                RaisePropertyChanged("ChartTimeLife");
             }
         }
 
@@ -145,19 +143,17 @@ namespace EvolutionGrid.ViewModel
             engine.ChangeTimeLifeProperty += (sender, e) => { TimeLife = e; if (iDSelected != 0) RefreshSelectedSquare(); };
         }
 
-        private void GrafLife()
+        private void GrafLife()  //TODO: Не забыть вынести
         {
-            Graf = new PointCollection();
+            ChartTimeLife = new ObservableCollection<Point>();
             
             for (int i = 0; i < pointY.Length; i++)
             {
                 if (pointY[i + offsetX] == 0)
                     break;
-                Graf.Add(new Point(i, pointY[i + offsetX]));
+                ChartTimeLife.Add(new Point(i, pointY[i + offsetX]));
                 
             }
-
-            Graf.Freeze();
         }
 
         #region Commands

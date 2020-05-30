@@ -9,18 +9,20 @@
     Title="Natural selection"
     Width="800"
     Height="450"
+    d:DataContext="{d:DesignInstance user:MainWindowViewModel}"
     ResizeMode="NoResize"
     ScrollViewer.VerticalScrollBarVisibility="Disabled"
     SizeToContent="WidthAndHeight"
-    mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance user:MainWindowViewModel}">
+    mc:Ignorable="d">
+    <Window.Resources>
+        <user:TypeToColorConverter x:Key="TypeToColorConvert" />
+        <user:BoolToColorConverter x:Key="BoolToColorConvert" />
+        <user:ObservableToPointCollectionConverter x:Key="ObservableToPointCollectionConvert" />
+    </Window.Resources>
 
     <Grid>
         <ItemsControl ItemsSource="{Binding WorldMap, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-            <ItemsControl.Resources>
-                <user:TypeToColorConverter x:Key="TypeToColorConvert" />
-                <user:BoolToColorConverter x:Key="BoolToColorConvert" />
-            </ItemsControl.Resources>
+
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type user:SquareViewModel}">
                     <ItemsControl ItemsSource="{Binding UpdateSourceTrigger=PropertyChanged}">
@@ -108,14 +110,13 @@
             VerticalAlignment="Top"
             Content="Скорость"
             FontWeight="Bold" />
-
         <Polyline
             Grid.Row="1"
             Grid.Column="0"
             Width="{Binding WidthGraf, UpdateSourceTrigger=PropertyChanged}"
             Margin="10"
             HorizontalAlignment="Left"
-            Points="{Binding Graf, UpdateSourceTrigger=PropertyChanged}"
+            Points="{Binding ChartTimeLife, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ObservableToPointCollectionConvert}}"
             RenderTransformOrigin="0.5,0.5"
             Stretch="Fill"
             Stroke="Red"
@@ -177,12 +178,13 @@
             Content="+"
             FontSize="16"
             FontWeight="Bold" />
-        <!--На будущее, пока не готово-->
+        <!--  На будущее, пока не готово  -->
         <Grid
             Grid.RowSpan="2"
             Grid.Column="1"
             Margin="30,0,0,110"
-            VerticalAlignment="Bottom" HorizontalAlignment="Left">
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom">
             <ItemsControl ItemsSource="{Binding SelectedBrains, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <ItemsControl.Resources>
                     <user:BoolToColorConverter x:Key="BoolToColorConvert" />
@@ -202,7 +204,7 @@
                                         Height="15"
                                         Margin="1"
                                         Background="Blue">
-                                            <Border Background="{Binding IsSelected, Converter={StaticResource BoolToColorConvert}, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Border Background="{Binding IsSelected, Converter={StaticResource BoolToColorConvert}, UpdateSourceTrigger=PropertyChanged}" />
                                         <TextBlock
                                             Margin="2"
                                             HorizontalAlignment="Center"

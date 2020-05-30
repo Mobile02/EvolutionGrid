@@ -91,6 +91,7 @@
     <Compile Include="Model\Square.cs" />
     <Compile Include="ViewModel\BoolToColorConverter.cs" />
     <Compile Include="ViewModel\ColorConverter.cs" />
+    <Compile Include="ViewModel\ObservableToPointCollectionConverter.cs" />
     <Compile Include="ViewModel\SquareViewModel.cs" />
     <Compile Include="ViewModel\TypeToColorConverter.cs" />
     <Compile Include="ViewModel\TextConverter.cs" />
