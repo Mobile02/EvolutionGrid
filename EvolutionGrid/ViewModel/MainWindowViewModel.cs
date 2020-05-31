@@ -142,7 +142,6 @@ namespace EvolutionGrid.ViewModel
 
             engine.ChangeGenerationProperty += (sender, e) => { Generation = e; UpdateChartLife(); };
             engine.ChangeMaxTimeLifeProperty += (sender, e) => MaxTimeLife = e;
-            engine.ChangeOffsetXProperty += (sender, e) => offsetX = e;
             engine.ChangeTimeLifeProperty += (sender, e) => { TimeLife = e; if (iDSelected != 0) RefreshSelectedSquare(); };
 
             ChartTimeLife = new ObservableCollection<int[]>();

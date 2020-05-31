@@ -19,15 +19,12 @@ namespace EvolutionGrid.Model
         private Square infoSelectSquare;
 
 
-
-        private void RaiseOffsetXProperty(int value) => ChangeOffsetXProperty?.Invoke(this, value);
         private void RaiseTimeLifeProperty(int value) => ChangeTimeLifeProperty?.Invoke(this, value);
         private void RaiseGenerationProperty(int value) => ChangeGenerationProperty?.Invoke(this, value);
         private void RaiseMaxTimeLifeProperty(int value) => ChangeMaxTimeLifeProperty?.Invoke(this, value);
         private void RaiseMyProperty(Square value) => ChangeSquareProperty?.Invoke(this, value);
 
 
-        public event EventHandler<int> ChangeOffsetXProperty;
         public event EventHandler<int> ChangeTimeLifeProperty;
         public event EventHandler<int> ChangeGenerationProperty;
         public event EventHandler<int> ChangeMaxTimeLifeProperty;
