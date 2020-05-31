@@ -64,6 +64,7 @@ namespace EvolutionGrid.Model
                     worldMap[y][x].PointY = y;
                     worldMap[y][x].Brain = GeneratorBrain();
 
+                    CountSquare.CountLiveBio++;
                     CountSquare.ID++;
                     count--;
                 }
@@ -112,7 +113,9 @@ namespace EvolutionGrid.Model
         {
             new FileOperation().SaveBrain(worldMap);
 
-            Square[] arraySquares = new Square[constants.CountSquare / 8];
+            var oo = CountSquare.CountLiveBio;
+
+            Square[] arraySurvivorSquares = new Square[constants.CountSquare / 8];
 
             int count = 0;
             for (int y = 1; y < constants.WorldSizeY - 1; y++)
@@ -121,14 +124,14 @@ namespace EvolutionGrid.Model
                 {
                     if (worldMap[y][x].TypeSquare == TypeSquare.BIO)
                     {
-                        arraySquares[count] = (Square)worldMap[y][x].Clone();
+                        arraySurvivorSquares[count] = (Square)worldMap[y][x].Clone();
 
                         count++;
                     }
                 }
             }
 
-            for (int i = 0; i < arraySquares.Length; i++)
+            for (int i = 0; i < arraySurvivorSquares.Length; i++)
             {
                 int tmpCount = 0;
 
@@ -146,10 +149,42 @@ namespace EvolutionGrid.Model
                         worldMap[y][x].Pointer = 0;
                         worldMap[y][x].PointX = x;
                         worldMap[y][x].PointY = y;
-                        worldMap[y][x].Brain = GeneratorBrainMutant(arraySquares[i]);
+                        worldMap[y][x].Brain = GeneratorBrainMutant(arraySurvivorSquares[i]);
 
                         CountSquare.ID++;
+                        CountSquare.CountLiveBio++;
                         tmpCount++;
+                    }
+                }
+            }
+        }
+
+        public void Reproduction(Square[][] worldMap, Square parent)
+        {
+            Square[] parents = new Square[1]
+            {
+                parent
+            };
+
+            for (int x = parent.PointX - 1; x < parent.PointX + 1; x++)
+            {
+                for (int y = parent.PointY - 1; y < parent.PointY + 1; y++)
+                {
+                    if (worldMap[y][x].TypeSquare == TypeSquare.EMPTY)
+                    {
+                        CountSquare.ID++;
+
+                        worldMap[y][x].ID = CountSquare.ID;
+                        worldMap[y][x].TypeSquare = TypeSquare.BIO;
+                        worldMap[y][x].Health = constants.HealthSquare;
+                        worldMap[y][x].Direction = (Direction)random.Next(8);
+                        worldMap[y][x].Pointer = 0;
+                        worldMap[y][x].PointX = x;
+                        worldMap[y][x].PointY = y;
+                        worldMap[y][x].Brain = GeneratorBrainMutant(parents[0]);
+
+                        CountSquare.CountLiveBio++;
+                        return;
                     }
                 }
             }

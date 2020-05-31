@@ -75,7 +75,7 @@ namespace EvolutionGrid.Model
         {
             constants = new Constants();
             WorldMap = new Square[constants.WorldSizeY][];
-            CountSquare.CountLiveBio = constants.CountSquare;
+            //CountSquare.CountLiveBio = constants.CountSquare;
             eventSlim = new ManualResetEventSlim(false);
 
             new GeneratorSquare().FillWorldMap(WorldMap);
@@ -113,7 +113,7 @@ namespace EvolutionGrid.Model
                         new GeneratorSquare().AddAcidSquare(WorldMap, constants.CountAcid);
                         new GeneratorSquare().AddFoodSquare(WorldMap, constants.CountFood);
                         new GeneratorSquare().AddChild(WorldMap);
-                        CountSquare.CountLiveBio = constants.CountSquare;
+                        //CountSquare.CountLiveBio = constants.CountSquare;
 
                         ArrayTimeLife[gen] = i;
 

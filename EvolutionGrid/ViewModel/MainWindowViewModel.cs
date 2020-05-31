@@ -30,7 +30,6 @@ namespace EvolutionGrid.ViewModel
         private int maxTimeLife = 0;
         private ObservableCollection<int[]> chartTimeLife;
         private int[] pointY;
-        private int offsetX = 0;
         private int widthGraf;
         private SquareViewModel selectedSquare;
         private double iDSelected;

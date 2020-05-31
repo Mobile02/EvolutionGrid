@@ -10,20 +10,18 @@ namespace EvolutionGrid.Model
 {
     public class BehaviorSquare
     {
-        private delegate void DelegateCalcPointer();
-
         private Square[][] worldMap;
         private Constants constants = new Constants();
         private Point currentPoint = new Point();
         private bool minCountLive = false;
-        private Dictionary<TypeSquare, DelegateCalcPointer> pointerOffset;
+        private Dictionary<TypeSquare, Action> pointerOffset;
 
 
         public BehaviorSquare(Square[][] worldMap)
         {
             this.worldMap = worldMap;
 
-            pointerOffset = new Dictionary<TypeSquare, DelegateCalcPointer>
+            pointerOffset = new Dictionary<TypeSquare, Action>
             {
                 { TypeSquare.ACID, () => worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer++ },
                 { TypeSquare.FOOD, () => worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer += 2 },
@@ -37,7 +35,7 @@ namespace EvolutionGrid.Model
 
         public void StartAction()    //TODO: Переделать как было когда то давно, добавить клетке свойство перемещалась или нет в этом цикле
         {
-            Square[] tmpArraySquares = new Square[constants.CountSquare];
+            Square[] tmpArraySquares = new Square[CountSquare.CountLiveBio];
             int count = 0;
 
             for (int y = 1; y < constants.WorldSizeY - 1; y++)
@@ -99,8 +97,14 @@ namespace EvolutionGrid.Model
                     Check(worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain[worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer] - 24);
                     continue;
                 }
+
+                if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain[worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer] == 32)
+                {
+                    Reproduction();
+                    break;
+                }
                     
-                if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain[worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer] > 31)
+                if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain[worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer] > 32)
                 {
                     worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer += worldMap[(int)currentPoint.Y][(int)currentPoint.X].Brain[worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer];
                     if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer >= constants.SizeBrain)
@@ -263,6 +267,19 @@ namespace EvolutionGrid.Model
                 CountSquare.CountFood++;
 
                 new GeneratorSquare().AddAcidSquare(worldMap, 1);
+            }
+        }
+
+        private void Reproduction()
+        {
+            if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health >= 70)
+            {
+                new GeneratorSquare().Reproduction(worldMap, (Square)worldMap[(int)currentPoint.Y][(int)currentPoint.X].Clone());
+                worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer++;
+                worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health = worldMap[(int)currentPoint.Y][(int)currentPoint.X].Health / 2;
+
+                if (worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer >= constants.SizeBrain)
+                    worldMap[(int)currentPoint.Y][(int)currentPoint.X].Pointer -= constants.SizeBrain;
             }
         }
 
