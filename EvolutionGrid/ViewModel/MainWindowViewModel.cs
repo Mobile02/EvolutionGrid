@@ -151,7 +151,7 @@ namespace EvolutionGrid.ViewModel
         private void UpdateChartLife()
         {
             ChartTimeLife.Clear();
-            ChartTimeLife = new ChartLife().UpdateChart(pointY, offsetX);
+            ChartTimeLife = new ChartLife().UpdateChart(pointY, Generation);
         }
 
         #region Commands

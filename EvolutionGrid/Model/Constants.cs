@@ -19,6 +19,7 @@ namespace EvolutionGrid.Model
         public int Height { get; set; }
         public int Width { get; set; }
         public int SizeBrain { get; private set; }
+        public int ScaleChart { get; private set; }
 
         public Constants()
         {
@@ -33,6 +34,7 @@ namespace EvolutionGrid.Model
             Height = 15;
             Width = 15;
             SizeBrain = 64;
+            ScaleChart = 700;
         }
     }
 }

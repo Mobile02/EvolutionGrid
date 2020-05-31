@@ -13,9 +13,6 @@ namespace EvolutionGrid.Model
     {
         private ManualResetEventSlim eventSlim;
         private Constants constants;
-        private int pointX = 0;
-        private int offsetX = 0;
-        private int scale = 700;
         private int timeLife;
         private int generation;
         private int maxTimeLife;
@@ -37,15 +34,6 @@ namespace EvolutionGrid.Model
         public event EventHandler<Square> ChangeSquareProperty;
 
         public int[] ArrayTimeLife;
-        public int OffsetX
-        {
-            get { return offsetX; }
-            set
-            {
-                offsetX = value;
-                RaiseOffsetXProperty(OffsetX);
-            }
-        }
         public int TimeLife
         {
             get { return timeLife; }
@@ -130,14 +118,10 @@ namespace EvolutionGrid.Model
                         new GeneratorSquare().AddChild(WorldMap);
                         CountSquare.CountLiveBio = constants.CountSquare;
 
-                        if (pointX > scale)
-                            OffsetX++;
-
-                        ArrayTimeLife[pointX] = i;
+                        ArrayTimeLife[gen] = i;
 
                         Generation = gen;
                         i = int.MaxValue - 1;
-                        pointX++;
                     }
                 }
             }
